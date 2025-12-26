@@ -1,0 +1,37 @@
+{{!--
+  Simple CTA Section
+  Full-width call to action banner
+  
+  Config:
+  - title: string - CTA headline
+  - description: string - CTA description
+  - primaryButtonText: string - Primary button text
+  - primaryButtonLink: string - Primary button link
+  - secondaryButtonText: string - Secondary button text
+  - secondaryButtonLink: string - Secondary button link
+  - style: string - Color style (primary, secondary, dark)
+  
+  DataSource: none
+--}}
+
+<section class="sf-section">
+  <div class="sf-container">
+    <div class="sf-cta {{#eq config.style "secondary"}}sf-cta-secondary{{/eq}}">
+      <h2 class="sf-cta-title">{{default config.title "Spremni za početak?"}}</h2>
+      <p class="sf-cta-description">
+        {{default config.description "Istražite našu kolekciju i pronađite savršen proizvod za sebe."}}
+      </p>
+      
+      <div class="sf-cta-actions">
+        <a href="{{default config.primaryButtonLink "/shop"}}" class="sf-btn sf-btn-primary sf-btn-lg">
+          {{default config.primaryButtonText "Kupuj sada"}}
+        </a>
+        {{#if config.secondaryButtonText}}
+        <a href="{{default config.secondaryButtonLink "/kontakt"}}" class="sf-btn sf-btn-outline sf-btn-lg">
+          {{config.secondaryButtonText}}
+        </a>
+        {{/if}}
+      </div>
+    </div>
+  </div>
+</section>

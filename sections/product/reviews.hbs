@@ -1,0 +1,138 @@
+{{!-- Product Reviews Section --}}
+{{!-- Displays customer reviews for the product --}}
+
+<section class="sf-section sf-product-reviews" data-section-id="{{sectionId}}">
+  <div class="sf-container">
+    <div class="sf-product-reviews__header">
+      <div class="sf-product-reviews__title-row">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <h2 class="sf-product-reviews__title">{{or config.title "Recenzije kupaca"}}</h2>
+        {{#if product.reviewCount}}
+          <span class="sf-product-reviews__count">({{product.reviewCount}})</span>
+        {{/if}}
+      </div>
+    </div>
+
+    {{#if reviews.length}}
+      <div class="sf-product-reviews__list">
+        {{#each reviews}}
+          <div class="sf-product-reviews__item">
+            <div class="sf-product-reviews__item-header">
+              <div class="sf-product-reviews__author">
+                {{#if this.user.image}}
+                  <img 
+                    src="{{this.user.image}}" 
+                    alt="{{this.user.name}}"
+                    class="sf-product-reviews__avatar"
+                  />
+                {{else}}
+                  <div class="sf-product-reviews__avatar sf-product-reviews__avatar--placeholder">
+                    {{firstLetter this.user.name}}
+                  </div>
+                {{/if}}
+                <div class="sf-product-reviews__author-info">
+                  <span class="sf-product-reviews__author-name">{{this.user.name}}</span>
+                  {{#if this.isVerified}}
+                    <span class="sf-product-reviews__verified">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg>
+                      Verificirana kupnja
+                    </span>
+                  {{/if}}
+                </div>
+              </div>
+              <div class="sf-product-reviews__meta">
+                {{{this.starsHtml}}}
+                <span class="sf-product-reviews__date">
+                  {{formatDate this.createdAt "DD.MM.YYYY."}}
+                </span>
+              </div>
+            </div>
+            
+            {{#if this.title}}
+              <h4 class="sf-product-reviews__item-title">{{this.title}}</h4>
+            {{/if}}
+            
+            <p class="sf-product-reviews__item-content">{{this.comment}}</p>
+            
+            {{#if this.images.length}}
+              <div class="sf-product-reviews__images">
+                {{#each this.images}}
+                  <img src="{{this}}" alt="Slika recenzije" class="sf-product-reviews__review-img" />
+                {{/each}}
+              </div>
+            {{/if}}
+          </div>
+        {{/each}}
+      </div>
+
+      {{#if (gt product.reviewCount reviews.length)}}
+        <div class="sf-product-reviews__more">
+          <button class="sf-product-reviews__more-btn">
+            Prikaži sve recenzije ({{product.reviewCount}})
+          </button>
+        </div>
+      {{/if}}
+    {{else}}
+      <div class="sf-product-reviews__empty">
+        <p>Još nema recenzija za ovaj proizvod. Budite prvi koji će ostaviti recenziju!</p>
+      </div>
+    {{/if}}
+
+    {{!-- Review Form --}}
+    <div class="sf-review-form">
+      <h3 class="sf-review-form__title">Ostavite recenziju</h3>
+      <form class="sf-review-form__form" data-action="submit-review" data-product-id="{{product.id}}">
+        <div class="sf-review-form__rating-input">
+          <label class="sf-review-form__label">Vaša ocjena</label>
+          <div class="sf-review-form__stars" data-rating-input>
+            <button type="button" class="sf-review-form__star" data-rating="1">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </button>
+            <button type="button" class="sf-review-form__star" data-rating="2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </button>
+            <button type="button" class="sf-review-form__star" data-rating="3">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </button>
+            <button type="button" class="sf-review-form__star" data-rating="4">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </button>
+            <button type="button" class="sf-review-form__star sf-review-form__star--active" data-rating="5">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </button>
+          </div>
+          <input type="hidden" name="rating" value="5" />
+        </div>
+
+        <div class="sf-review-form__field">
+          <label class="sf-review-form__label" for="review-title">Naslov (opcionalno)</label>
+          <input 
+            type="text" 
+            id="review-title" 
+            name="title" 
+            class="sf-review-form__input"
+            placeholder="Ukratko opišite vaše iskustvo"
+          />
+        </div>
+
+        <div class="sf-review-form__field">
+          <label class="sf-review-form__label" for="review-content">Vaša recenzija</label>
+          <textarea 
+            id="review-content" 
+            name="content" 
+            class="sf-review-form__textarea"
+            placeholder="Podijelite detalje o vašem iskustvu s ovim proizvodom..."
+            rows="4"
+            required
+          ></textarea>
+        </div>
+
+        <button type="submit" class="sf-review-form__submit">
+          Pošalji recenziju
+        </button>
+      </form>
+    </div>
+  </div>
+</section>
+
+{{!-- Styles are in design-sets/starter-flavor/styles/sections.css --}}

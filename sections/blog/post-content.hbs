@@ -1,0 +1,88 @@
+{{!-- Blog Post Content Section --}}
+{{!-- Displays the main content of the blog post --}}
+
+<section class="sds-section sds-post-content" data-section-id="{{sectionId}}">
+  <div class="sds-container">
+    {{#if post}}
+      <article class="sds-post-content__article">
+        <div class="sds-post-content__body">
+          {{{renderContent post.content}}}
+        </div>
+
+        {{!-- Share buttons --}}
+        <div class="sds-post-content__share">
+          <span class="sds-post-content__share-label">Podijeli:</span>
+          <div class="sds-post-content__share-buttons">
+            <a 
+              href="https://www.facebook.com/sharer/sharer.php?u={{encodeURIComponent currentUrl}}" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              class="sds-post-content__share-btn sds-post-content__share-btn--facebook"
+              title="Podijeli na Facebooku"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+            </a>
+            <a 
+              href="https://twitter.com/intent/tweet?url={{encodeURIComponent currentUrl}}&text={{encodeURIComponent post.title}}" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              class="sds-post-content__share-btn sds-post-content__share-btn--twitter"
+              title="Podijeli na X/Twitter"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            </a>
+            <a 
+              href="https://www.linkedin.com/shareArticle?mini=true&url={{encodeURIComponent currentUrl}}&title={{encodeURIComponent post.title}}" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              class="sds-post-content__share-btn sds-post-content__share-btn--linkedin"
+              title="Podijeli na LinkedInu"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
+            </a>
+            <button 
+              class="sds-post-content__share-btn sds-post-content__share-btn--copy"
+              onclick="copyToClipboard()"
+              title="Kopiraj link"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+            </button>
+          </div>
+        </div>
+
+        {{!-- Tags --}}
+        {{#if post.tags.length}}
+          <div class="sds-post-content__tags">
+            <span class="sds-post-content__tags-label">Tagovi:</span>
+            <div class="sds-post-content__tags-list">
+              {{#each post.tags}}
+                <a href="/blog?tag={{this.slug}}" class="sds-post-content__tag">
+                  #{{this.name}}
+                </a>
+              {{/each}}
+            </div>
+          </div>
+        {{/if}}
+      </article>
+    {{else}}
+      <div class="sds-post-content__empty">
+        <p>Sadržaj nije dostupan</p>
+      </div>
+    {{/if}}
+  </div>
+</section>
+
+<script>
+function copyToClipboard() {
+  navigator.clipboard.writeText(window.location.href).then(() => {
+    const btn = document.querySelector('.sds-post-content__share-btn--copy');
+    if (btn) {
+      btn.classList.add('sds-post-content__share-btn--copied');
+      setTimeout(() => {
+        btn.classList.remove('sds-post-content__share-btn--copied');
+      }, 2000);
+    }
+  });
+}
+</script>
+

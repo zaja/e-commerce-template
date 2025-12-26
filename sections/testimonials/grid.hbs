@@ -1,0 +1,149 @@
+{{!--
+  Testimonials Grid Section
+  Display customer reviews in a grid
+  
+  Config:
+  - title: string - Section title
+  - subtitle: string - Section description
+  - testimonials: array - Array of testimonials (static)
+    - quote: string - Customer quote
+    - name: string - Customer name
+    - role: string - Customer role/title
+    - avatar: string - Customer avatar URL
+    - rating: number - Rating 1-5
+  - useProductReviews: boolean - Use dynamic product reviews
+  
+  DataSource: { type: "reviews", filter: "approved", limit: 6 } (if useProductReviews)
+--}}
+
+<section class="sf-section" style="background-color: var(--sf-color-surface);">
+  <div class="sf-container">
+    {{#if config.title}}
+    <div class="sf-section-header">
+      <h2 class="sf-section-title">{{default config.title "Što kažu naši kupci"}}</h2>
+      {{#if config.subtitle}}
+      <p class="sf-section-description">{{config.subtitle}}</p>
+      {{/if}}
+    </div>
+    {{/if}}
+    
+    <div class="sf-testimonials-grid">
+      {{#if config.useProductReviews}}
+        {{#if reviews.length}}
+          {{#each reviews}}
+          <div class="sf-testimonial-card">
+            <div class="sf-testimonial-quote">{{this.comment}}</div>
+            <div class="sf-testimonial-author">
+              <div class="sf-testimonial-avatar">
+                {{#if this.user.image}}
+                <img src="{{this.user.image}}" alt="{{this.user.name}}">
+                {{else}}
+                {{firstLetter this.user.name}}
+                {{/if}}
+              </div>
+              <div>
+                <div class="sf-testimonial-name">{{this.user.name}}</div>
+                <div class="sf-testimonial-role">Kupac</div>
+                <div class="sf-testimonial-rating">
+                  {{#times 5}}
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="{{#if (lte @index ../this.rating)}}currentColor{{else}}none{{/if}}" stroke="currentColor" stroke-width="2">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                  </svg>
+                  {{/times}}
+                </div>
+              </div>
+            </div>
+          </div>
+          {{/each}}
+        {{else}}
+        {{{emptyState "reviews"}}}
+        {{/if}}
+      {{else}}
+        {{#if config.testimonials}}
+          {{#each config.testimonials}}
+          <div class="sf-testimonial-card">
+            <div class="sf-testimonial-quote">{{this.quote}}</div>
+            <div class="sf-testimonial-author">
+              <div class="sf-testimonial-avatar">
+                {{#if this.avatar}}
+                <img src="{{this.avatar}}" alt="{{this.name}}">
+                {{else}}
+                {{firstLetter this.name}}
+                {{/if}}
+              </div>
+              <div>
+                <div class="sf-testimonial-name">{{this.name}}</div>
+                {{#if this.role}}
+                <div class="sf-testimonial-role">{{this.role}}</div>
+                {{/if}}
+                {{#if this.rating}}
+                <div class="sf-testimonial-rating">
+                  {{#times 5}}
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="{{#if (lte @index ../this.rating)}}currentColor{{else}}none{{/if}}" stroke="currentColor" stroke-width="2">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                  </svg>
+                  {{/times}}
+                </div>
+                {{/if}}
+              </div>
+            </div>
+          </div>
+          {{/each}}
+        {{else}}
+          <!-- Default testimonials -->
+          <div class="sf-testimonial-card">
+            <div class="sf-testimonial-quote">Izvrsni proizvodi i super brza dostava! Naručila sam u ponedjeljak, a paket je stigao već u srijedu. Definitivno ću ponovno kupovati.</div>
+            <div class="sf-testimonial-author">
+              <div class="sf-testimonial-avatar">M</div>
+              <div>
+                <div class="sf-testimonial-name">Marija K.</div>
+                <div class="sf-testimonial-role">Zadovoljna kupca</div>
+                <div class="sf-testimonial-rating">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="sf-testimonial-card">
+            <div class="sf-testimonial-quote">Kvaliteta je fantastična, a cijene su više nego pristupačne. Preporučujem svima koji traže odličan omjer cijene i kvalitete.</div>
+            <div class="sf-testimonial-author">
+              <div class="sf-testimonial-avatar">I</div>
+              <div>
+                <div class="sf-testimonial-name">Ivan P.</div>
+                <div class="sf-testimonial-role">Stalni kupac</div>
+                <div class="sf-testimonial-rating">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="sf-testimonial-card">
+            <div class="sf-testimonial-quote">Korisnička podrška je odlična! Imala sam pitanje o narudžbi i odgovorili su mi u roku od sat vremena. Super iskustvo kupovine!</div>
+            <div class="sf-testimonial-author">
+              <div class="sf-testimonial-avatar">A</div>
+              <div>
+                <div class="sf-testimonial-name">Ana M.</div>
+                <div class="sf-testimonial-role">Kupac</div>
+                <div class="sf-testimonial-rating">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        {{/if}}
+      {{/if}}
+    </div>
+  </div>
+</section>

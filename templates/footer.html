@@ -1,0 +1,165 @@
+<!-- 
+  Starter Flavor - Footer Template
+  Supports: Logo, Navigation, Contact Info, Social Links, Newsletter
+  Integrates with: Menu system (FOOTER location)
+-->
+
+<footer class="sf-footer">
+  <div class="sf-container">
+    <!-- Footer Main -->
+    <div class="sf-footer-main">
+      <!-- Brand Column -->
+      <div class="sf-footer-brand">
+        <a href="/" class="sf-footer-logo">
+          {{#if workspace.logo}}
+            <img src="{{workspace.logo}}" alt="{{workspace.name}}" class="sf-footer-logo-img">
+          {{else}}
+            <span class="sf-footer-logo-text">{{workspace.name}}</span>
+          {{/if}}
+        </a>
+        {{#if workspace.description}}
+          <p class="sf-footer-description">{{truncate workspace.description 150}}</p>
+        {{/if}}
+        
+        <!-- Social Links -->
+        <div class="sf-footer-social">
+          {{#if workspace.facebookUrl}}
+            <a href="{{workspace.facebookUrl}}" class="sf-social-link" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+              </svg>
+            </a>
+          {{/if}}
+          {{#if workspace.twitterUrl}}
+            <a href="{{workspace.twitterUrl}}" class="sf-social-link" target="_blank" rel="noopener noreferrer" aria-label="Twitter/X">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+              </svg>
+            </a>
+          {{/if}}
+          {{#if workspace.instagramUrl}}
+            <a href="{{workspace.instagramUrl}}" class="sf-social-link" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect width="20" height="20" x="2" y="2" rx="5" ry="5"/>
+                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+                <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/>
+              </svg>
+            </a>
+          {{/if}}
+        </div>
+      </div>
+
+      <!-- Navigation Columns -->
+      {{#if footerMenu}}
+        {{#each footerMenu.items}}
+          {{#if children.length}}
+            <div class="sf-footer-column">
+              <h4 class="sf-footer-title">{{label}}</h4>
+              <ul class="sf-footer-links">
+                {{#each children}}
+                  <li>
+                    <a href="{{url}}" class="sf-footer-link" {{#if openInNewTab}}target="_blank" rel="noopener noreferrer"{{/if}}>
+                      {{label}}
+                    </a>
+                  </li>
+                {{/each}}
+              </ul>
+            </div>
+          {{/if}}
+        {{/each}}
+      {{else}}
+        <!-- Default columns if no footer menu -->
+        <div class="sf-footer-column">
+          <h4 class="sf-footer-title">Trgovina</h4>
+          <ul class="sf-footer-links">
+            <li><a href="/shop" class="sf-footer-link">Svi proizvodi</a></li>
+            <li><a href="/shop?filter=new" class="sf-footer-link">Novo</a></li>
+            <li><a href="/shop?filter=sale" class="sf-footer-link">Akcija</a></li>
+          </ul>
+        </div>
+        <div class="sf-footer-column">
+          <h4 class="sf-footer-title">Podrška</h4>
+          <ul class="sf-footer-links">
+            <li><a href="/kontakt" class="sf-footer-link">Kontakt</a></li>
+            <li><a href="/dostava" class="sf-footer-link">Dostava</a></li>
+            <li><a href="/povrati" class="sf-footer-link">Povrati</a></li>
+          </ul>
+        </div>
+        <div class="sf-footer-column">
+          <h4 class="sf-footer-title">Informacije</h4>
+          <ul class="sf-footer-links">
+            <li><a href="/o-nama" class="sf-footer-link">O nama</a></li>
+            <li><a href="/blog" class="sf-footer-link">Blog</a></li>
+            <li><a href="/uvjeti-koristenja" class="sf-footer-link">Uvjeti korištenja</a></li>
+            <li><a href="/privatnost" class="sf-footer-link">Privatnost</a></li>
+          </ul>
+        </div>
+      {{/if}}
+
+      <!-- Contact Column -->
+      <div class="sf-footer-column">
+        <h4 class="sf-footer-title">Kontakt</h4>
+        <ul class="sf-footer-contact">
+          {{#if workspace.email}}
+            <li>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect width="20" height="16" x="2" y="4" rx="2"/>
+                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+              </svg>
+              <a href="mailto:{{workspace.email}}">{{workspace.email}}</a>
+            </li>
+          {{/if}}
+          {{#if workspace.phone}}
+            <li>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+              </svg>
+              <a href="tel:{{workspace.phone}}">{{workspace.phone}}</a>
+            </li>
+          {{/if}}
+          {{#if workspace.address}}
+            <li>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/>
+                <circle cx="12" cy="10" r="3"/>
+              </svg>
+              <span>{{workspace.address}}</span>
+            </li>
+          {{/if}}
+        </ul>
+      </div>
+    </div>
+
+    <!-- Footer Bottom -->
+    <div class="sf-footer-bottom">
+      <p class="sf-footer-copyright">
+        &copy; {{currentYear}} {{workspace.name}}. Sva prava pridržana.
+      </p>
+      
+      <!-- Payment Icons -->
+      <div class="sf-footer-payments">
+        <span class="sf-payment-icon" title="Visa">
+          <svg width="38" height="24" viewBox="0 0 38 24" fill="none">
+            <rect width="38" height="24" rx="4" fill="#1A1F71"/>
+            <path d="M15.5 16H13.7L14.9 8H16.7L15.5 16ZM12.3 8L10.6 13.6L10.4 12.6L9.7 9C9.7 9 9.6 8 8.3 8H5.1L5 8.2C5 8.2 6.5 8.5 8.1 9.5L9.7 16H11.6L14.2 8H12.3ZM26.7 16H28.4L26.9 8H25.5C24.4 8 24.1 8.8 24.1 8.8L21.3 16H23.2L23.6 14.9H25.9L26.2 16H26.7ZM24.1 13.4L25.1 10.6L25.7 13.4H24.1ZM22.5 10.3L22.7 8.9C22.7 8.9 21.5 8.5 20.3 8.5C19 8.5 16.4 9 16.4 11.2C16.4 13.3 19.4 13.3 19.4 14.4C19.4 15.5 16.8 15.2 15.7 14.4L15.5 16C15.5 16 16.7 16.5 18.3 16.5C19.9 16.5 22.3 15.7 22.3 13.6C22.3 11.4 19.3 11.2 19.3 10.3C19.3 9.4 21.3 9.5 22.5 10.3Z" fill="white"/>
+          </svg>
+        </span>
+        <span class="sf-payment-icon" title="Mastercard">
+          <svg width="38" height="24" viewBox="0 0 38 24" fill="none">
+            <rect width="38" height="24" rx="4" fill="#F5F5F5"/>
+            <circle cx="15" cy="12" r="7" fill="#EB001B"/>
+            <circle cx="23" cy="12" r="7" fill="#F79E1B"/>
+            <path d="M19 6.5C20.5 7.8 21.5 9.8 21.5 12C21.5 14.2 20.5 16.2 19 17.5C17.5 16.2 16.5 14.2 16.5 12C16.5 9.8 17.5 7.8 19 6.5Z" fill="#FF5F00"/>
+          </svg>
+        </span>
+        <span class="sf-payment-icon" title="PayPal">
+          <svg width="38" height="24" viewBox="0 0 38 24" fill="none">
+            <rect width="38" height="24" rx="4" fill="#F5F5F5"/>
+            <path d="M14.5 18H12L13.5 9H17.5C19.5 9 20.5 10.5 20 12C19.5 14 17.5 15 16 15H14L14.5 18Z" fill="#003087"/>
+            <path d="M17.5 18H15L16.5 9H20.5C22.5 9 23.5 10.5 23 12C22.5 14 20.5 15 19 15H17L17.5 18Z" fill="#009CDE"/>
+          </svg>
+        </span>
+      </div>
+    </div>
+  </div>
+</footer>

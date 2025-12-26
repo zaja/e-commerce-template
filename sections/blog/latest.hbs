@@ -1,0 +1,91 @@
+{{!--
+  Latest Blog Posts Section
+  Displays recent blog posts in a grid
+  
+  Config:
+  - title: string - Section title
+  - subtitle: string - Section description
+  - showAuthor: boolean - Show post author
+  - showDate: boolean - Show publish date
+  - showExcerpt: boolean - Show post excerpt
+  - ctaText: string - View all button text
+  - ctaLink: string - View all button link
+  - limit: number - Number of posts to show
+  
+  DataSource: { type: "posts", filter: "latest", limit: 3 }
+--}}
+
+<section class="sf-section">
+  <div class="sf-container">
+    {{#if config.title}}
+    <div class="sf-section-header">
+      <h2 class="sf-section-title">{{default config.title "Iz našeg bloga"}}</h2>
+      {{#if config.subtitle}}
+      <p class="sf-section-description">{{config.subtitle}}</p>
+      {{/if}}
+    </div>
+    {{/if}}
+    
+    {{#if posts.length}}
+    <div class="sf-blog-grid">
+      {{#each posts}}
+      <article class="sf-blog-card">
+        <!-- Post Image -->
+        <a href="{{postUrl this.slug}}" class="sf-blog-image">
+          {{responsiveImage this.featuredImage alt=this.title class="sf-blog-img" loading="lazy" sizes="(max-width: 768px) 100vw, 33vw"}}
+        </a>
+        
+        <!-- Post Content -->
+        <div class="sf-blog-body">
+          {{#if (or (and config.showDate this.publishedAt) this.tags.length)}}
+          <div class="sf-blog-meta">
+            {{#if this.tags.length}}
+            <span class="sf-blog-tag">{{this.tags.[0].tag.name}}</span>
+            {{/if}}
+            {{#if (and config.showDate this.publishedAt)}}
+            <span>{{formatDate this.publishedAt "DD.MM.YYYY."}}</span>
+            {{/if}}
+          </div>
+          {{/if}}
+          
+          <h3 class="sf-blog-title">
+            <a href="{{postUrl this.slug}}">{{this.title}}</a>
+          </h3>
+          
+          {{#if this.excerpt}}
+          <p class="sf-blog-excerpt">{{truncate this.excerpt 150}}</p>
+          {{/if}}
+          
+          {{#if this.author}}
+          <div class="sf-blog-author">
+            <div class="sf-blog-author-avatar">
+              {{#if this.author.image}}
+              <img src="{{this.author.image}}" alt="{{this.author.name}}">
+              {{else}}
+              {{firstLetter this.author.name}}
+              {{/if}}
+            </div>
+            <span class="sf-blog-author-name">{{this.author.name}}</span>
+          </div>
+          {{/if}}
+        </div>
+      </article>
+      {{/each}}
+    </div>
+    
+    {{#if config.ctaText}}
+    <div class="sf-products-footer">
+      <a href="{{default config.ctaLink "/blog"}}" class="sf-btn sf-btn-outline sf-btn-lg">
+        {{config.ctaText}}
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M5 12h14"/>
+          <path d="m12 5 7 7-7 7"/>
+        </svg>
+      </a>
+    </div>
+    {{/if}}
+    {{else}}
+    {{{emptyState "posts"}}}
+    {{/if}}
+  </div>
+</section>

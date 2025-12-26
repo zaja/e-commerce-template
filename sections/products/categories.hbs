@@ -1,0 +1,47 @@
+{{!--
+  Product Categories Section
+  Displays product categories in a visual grid
+  
+  Config:
+  - title: string - Section title
+  - subtitle: string - Section description
+  - columns: number - Grid columns (3 or 4)
+  - showCount: boolean - Show product count per category
+  
+  DataSource: { type: "categories", limit: 6 }
+--}}
+
+<section class="sf-section sf-products-section">
+  <div class="sf-container">
+    {{#if config.title}}
+    <div class="sf-section-header">
+      <h2 class="sf-section-title">{{default config.title "Kategorije"}}</h2>
+      {{#if config.subtitle}}
+      <p class="sf-section-description">{{config.subtitle}}</p>
+      {{/if}}
+    </div>
+    {{/if}}
+    
+    {{#if categories.length}}
+    <div class="sf-categories-grid">
+      {{#each categories}}
+      <a href="/shop?category={{this.slug}}" class="sf-category-card">
+        {{#if this.image}}
+        <img src="{{this.image}}" alt="{{this.name}}" loading="lazy">
+        {{else}}
+        <div class="sf-category-placeholder"></div>
+        {{/if}}
+        <div class="sf-category-content">
+          <h3 class="sf-category-title">{{this.name}}</h3>
+          {{#if ../config.showCount}}
+          <span class="sf-category-count">{{this._count.products}} proizvoda</span>
+          {{/if}}
+        </div>
+      </a>
+      {{/each}}
+    </div>
+    {{else}}
+    {{{emptyState "categories"}}}
+    {{/if}}
+  </div>
+</section>

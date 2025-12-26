@@ -1,0 +1,61 @@
+{{!--
+  Hero Simple Section
+  A centered hero with title, subtitle, and CTA buttons
+  
+  Config:
+  - title: string - Main headline
+  - subtitle: string - Supporting text
+  - badge: string - Small badge text above title
+  - showCta: boolean - Show primary CTA
+  - ctaText: string - Primary button text
+  - ctaLink: string - Primary button link
+  - showSecondaryCta: boolean - Show secondary CTA
+  - secondaryCtaText: string - Secondary button text
+  - secondaryCtaLink: string - Secondary button link
+  - backgroundImage: string - Background image URL
+  - overlayOpacity: number - Background overlay opacity (0-100)
+  - darkMode: boolean - Use dark text on light background
+  
+  DataSource: none
+--}}
+
+<section class="sf-section sf-hero sf-hero-centered {{#if config.darkMode}}sf-hero-dark{{/if}}">
+  {{#if config.backgroundImage}}
+  <div class="sf-hero-background">
+    <img src="{{config.backgroundImage}}" alt="" loading="eager">
+    <div class="sf-hero-overlay" style="opacity: {{default config.overlayOpacity 50}}%"></div>
+  </div>
+  {{/if}}
+  
+  <div class="sf-container">
+    <div class="sf-hero-content">
+      {{#if config.badge}}
+      <span class="sf-hero-badge">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+        </svg>
+        {{config.badge}}
+      </span>
+      {{/if}}
+      
+      <h1 class="sf-hero-title">{{default config.title "Dobrodošli u našu trgovinu"}}</h1>
+      
+      {{#if config.subtitle}}
+      <p class="sf-hero-subtitle">{{config.subtitle}}</p>
+      {{/if}}
+      
+      {{#if config.showCta}}
+      <div class="sf-hero-actions">
+        <a href="{{default config.ctaLink "/shop"}}" class="sf-btn sf-btn-primary sf-btn-lg">
+          {{default config.ctaText "Kupuj sada"}}
+        </a>
+        {{#if config.showSecondaryCta}}
+        <a href="{{default config.secondaryCtaLink "/about"}}" class="sf-btn sf-btn-outline sf-btn-lg">
+          {{default config.secondaryCtaText "Saznaj više"}}
+        </a>
+        {{/if}}
+      </div>
+      {{/if}}
+    </div>
+  </div>
+</section>

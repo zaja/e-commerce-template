@@ -1,0 +1,86 @@
+{{!--
+  Hero Featured Product Section
+  Split hero with featured product and details
+  
+  Config:
+  - badge: string - Badge text above title
+  - showPrice: boolean - Show product price
+  - showRating: boolean - Show product rating
+  - ctaText: string - Button text
+  - backgroundColor: string - Section background color
+  
+  DataSource: { type: "products", filter: "featured", limit: 1 }
+--}}
+
+<section class="sf-section sf-hero" style="{{#if config.backgroundColor}}background-color: {{config.backgroundColor}};{{/if}}">
+  <div class="sf-container">
+    {{#if featuredProduct}}
+    <div class="sf-hero-product">
+      <!-- Product Image -->
+      <div class="sf-hero-product-image">
+        {{responsiveImage featuredProduct.featuredImage alt=featuredProduct.name class="sf-hero-product-img" loading="eager" priority=true sizes="(max-width: 768px) 100vw, 50vw"}}
+        {{#if featuredProduct.compareAtPrice}}
+        <span class="sf-badge sf-badge-sale sf-hero-product-badge">Akcija</span>
+        {{/if}}
+      </div>
+      
+      <!-- Product Details -->
+      <div class="sf-hero-product-details">
+        {{#if config.badge}}
+        <span class="sf-hero-badge">{{config.badge}}</span>
+        {{else}}
+        <span class="sf-hero-badge">Istaknuti proizvod</span>
+        {{/if}}
+        
+        <h1 class="sf-hero-title">{{featuredProduct.name}}</h1>
+        
+        {{#if featuredProduct.shortDescription}}
+        <p class="sf-hero-subtitle">{{featuredProduct.shortDescription}}</p>
+        {{else if featuredProduct.description}}
+        <p class="sf-hero-subtitle">{{truncate featuredProduct.description 150}}</p>
+        {{/if}}
+        
+        {{#if config.showRating}}
+        {{#if featuredProduct.averageRating}}
+        <div class="sf-product-rating sf-mt-4">
+          <div class="sf-rating-stars">
+            {{#times 5}}
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="{{#if (lte @index featuredProduct.averageRating)}}currentColor{{else}}none{{/if}}" stroke="currentColor" stroke-width="2">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+            </svg>
+            {{/times}}
+          </div>
+          <span class="sf-rating-count">({{featuredProduct.reviewCount}} recenzija)</span>
+        </div>
+        {{/if}}
+        {{/if}}
+        
+        {{#if config.showPrice}}
+        <div class="sf-product-price sf-mt-6">
+          <span class="sf-price-current">{{formatPrice featuredProduct.price}}</span>
+          {{#if featuredProduct.compareAtPrice}}
+          <span class="sf-price-original">{{formatPrice featuredProduct.compareAtPrice}}</span>
+          {{/if}}
+        </div>
+        {{/if}}
+        
+        <div class="sf-hero-actions sf-mt-8">
+          <a href="{{productUrl featuredProduct.slug}}" class="sf-btn sf-btn-primary sf-btn-lg">
+            {{default config.ctaText "Pogledaj proizvod"}}
+          </a>
+          <button class="sf-btn sf-btn-outline sf-btn-lg" data-add-to-cart="{{featuredProduct.id}}">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/>
+              <path d="M3 6h18"/>
+              <path d="M16 10a4 4 0 0 1-8 0"/>
+            </svg>
+            Dodaj u košaricu
+          </button>
+        </div>
+      </div>
+    </div>
+    {{else}}
+    {{{emptyState "products"}}}
+    {{/if}}
+  </div>
+</section>

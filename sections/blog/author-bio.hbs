@@ -1,0 +1,45 @@
+{{!-- Author Bio Section --}}
+{{!-- Displays information about the post author --}}
+
+<section class="sds-section sds-author-bio" data-section-id="{{sectionId}}">
+  <div class="sds-container">
+    {{#if post.author}}
+      <div class="sds-author-bio__card">
+        <div class="sds-author-bio__avatar">
+          {{#if post.author.image}}
+            <img src="{{post.author.image}}" alt="{{post.author.name}}" />
+          {{else}}
+            <div class="sds-author-bio__avatar-placeholder">
+              {{firstLetter post.author.name}}
+            </div>
+          {{/if}}
+        </div>
+        <div class="sds-author-bio__content">
+          <span class="sds-author-bio__label">Napisao/la</span>
+          <h3 class="sds-author-bio__name">{{post.author.name}}</h3>
+          {{#if post.author.bio}}
+            <p class="sds-author-bio__description">{{post.author.bio}}</p>
+          {{else}}
+            <p class="sds-author-bio__description">
+              Autor na {{workspace.name}}. Pišem o temama koje me zanimaju i koje mogu pomoći našim čitateljima.
+            </p>
+          {{/if}}
+          {{#if post.author.socialLinks}}
+            <div class="sds-author-bio__social">
+              {{#if post.author.socialLinks.twitter}}
+                <a href="{{post.author.socialLinks.twitter}}" target="_blank" rel="noopener" title="Twitter">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                </a>
+              {{/if}}
+              {{#if post.author.socialLinks.linkedin}}
+                <a href="{{post.author.socialLinks.linkedin}}" target="_blank" rel="noopener" title="LinkedIn">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
+                </a>
+              {{/if}}
+            </div>
+          {{/if}}
+        </div>
+      </div>
+    {{/if}}
+  </div>
+</section>

@@ -1,0 +1,38 @@
+{{!-- Custom Page Content Section --}}
+{{!-- Displays the main content of a custom page --}}
+
+<section class="sds-section sds-page-content" data-section-id="{{sectionId}}">
+  <div class="sds-container">
+    {{#if page}}
+      <article class="sds-page-content__article">
+        {{!-- Page Header --}}
+        <header class="sds-page-content__header">
+          <h1 class="sds-page-content__title">{{page.title}}</h1>
+          {{#if page.excerpt}}
+            <p class="sds-page-content__excerpt">{{page.excerpt}}</p>
+          {{/if}}
+        </header>
+
+        {{!-- Featured Image --}}
+        {{#if page.featuredImageMedia}}
+          <div class="sds-page-content__featured-image">
+            {{responsiveImage page.featuredImageMedia alt=page.title class="sds-page-content__image"}}
+          </div>
+        {{else if page.featuredImage}}
+          <div class="sds-page-content__featured-image">
+            <img src="{{page.featuredImage}}" alt="{{page.title}}" class="sds-page-content__image" loading="lazy">
+          </div>
+        {{/if}}
+
+        {{!-- Page Body Content --}}
+        <div class="sds-page-content__body">
+          {{{renderContent page.content}}}
+        </div>
+      </article>
+    {{else}}
+      <div class="sds-page-content__empty">
+        <p>Sadržaj nije dostupan</p>
+      </div>
+    {{/if}}
+  </div>
+</section>

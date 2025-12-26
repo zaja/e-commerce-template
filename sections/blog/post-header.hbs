@@ -1,0 +1,84 @@
+{{!-- Blog Post Header Section --}}
+{{!-- Displays post title, author, date and featured image --}}
+
+<section class="sds-section sds-post-header" data-section-id="{{sectionId}}">
+  {{#if post}}
+    {{!-- Featured Image --}}
+    {{#if post.featuredImageMedia}}
+      <div class="sds-post-header__image">
+        {{responsiveImage post.featuredImageMedia alt=post.title class="sds-post-header__img" loading="eager" priority=true sizes="100vw"}}
+      </div>
+    {{else if post.featuredImage}}
+      <div class="sds-post-header__image">
+        <img src="{{post.featuredImage}}" alt="{{post.title}}" class="sds-post-header__img" loading="eager">
+      </div>
+    {{/if}}
+
+    <div class="sds-container">
+      <div class="sds-post-header__content {{#unless post.featuredImage}}sds-post-header__content--no-image{{/unless}}">
+        {{!-- Breadcrumb --}}
+        <nav class="sds-post-header__breadcrumb">
+          <a href="/">Početna</a>
+          <span>/</span>
+          <a href="/blog">Blog</a>
+          <span>/</span>
+          <span>{{truncate post.title 30}}</span>
+        </nav>
+
+        {{!-- Tags --}}
+        {{#if post.tags.length}}
+          <div class="sds-post-header__tags">
+            {{#each post.tags}}
+              <a href="/blog?tag={{this.slug}}" class="sds-post-header__tag">
+                {{this.name}}
+              </a>
+            {{/each}}
+          </div>
+        {{/if}}
+
+        {{!-- Title --}}
+        <h1 class="sds-post-header__title">{{post.title}}</h1>
+
+        {{!-- Excerpt --}}
+        {{#if post.excerpt}}
+          <p class="sds-post-header__excerpt">{{post.excerpt}}</p>
+        {{/if}}
+
+        {{!-- Meta --}}
+        <div class="sds-post-header__meta">
+          {{!-- Author --}}
+          {{#if post.author}}
+            <div class="sds-post-header__author">
+              {{#if post.author.image}}
+                <img src="{{post.author.image}}" alt="{{post.author.name}}" class="sds-post-header__author-avatar" />
+              {{else}}
+                <div class="sds-post-header__author-avatar sds-post-header__author-avatar--placeholder">
+                  {{firstLetter post.author.name}}
+                </div>
+              {{/if}}
+              <span class="sds-post-header__author-name">{{post.author.name}}</span>
+            </div>
+          {{/if}}
+
+          {{!-- Date --}}
+          <div class="sds-post-header__date">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+            <span>{{formatDate post.publishedAt "DD. MMMM YYYY."}}</span>
+          </div>
+
+          {{!-- Reading time estimate --}}
+          <div class="sds-post-header__reading-time">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <span>{{or post.readingTime "5"}} min čitanja</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  {{else}}
+    <div class="sds-container">
+      <div class="sds-post-header__empty">
+        <p>Članak nije pronađen</p>
+      </div>
+    </div>
+  {{/if}}
+</section>

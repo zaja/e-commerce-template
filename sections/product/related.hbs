@@ -1,0 +1,57 @@
+{{!-- Related Products Section --}}
+{{!-- Displays related/similar products --}}
+
+<section class="sf-section sf-related-products" data-section-id="{{sectionId}}">
+  <div class="sf-container">
+    <div class="sf-related-products__header">
+      <h2 class="sf-related-products__title">
+        {{or config.title "Slični proizvodi"}}
+      </h2>
+      {{#if config.subtitle}}
+        <p class="sf-related-products__subtitle">{{config.subtitle}}</p>
+      {{/if}}
+    </div>
+
+    {{#if relatedProducts.length}}
+      <div class="sf-related-products__grid">
+        {{#each relatedProducts}}
+          <a href="{{productUrl this.slug}}" class="sf-related-products__item">
+            <div class="sf-related-products__image">
+              {{responsiveImage (or this.featuredImage this.images.[0].url) alt=this.name class="sf-related-products__img" loading="lazy" sizes="(max-width: 768px) 50vw, 25vw"}}
+              {{#if this.compareAtPrice}}
+                <span class="sf-related-products__badge">
+                  -{{discountPercentage this.compareAtPrice this.price}}%
+                </span>
+              {{/if}}
+            </div>
+            <div class="sf-related-products__info">
+              <h3 class="sf-related-products__name">{{this.name}}</h3>
+              {{#if this.rating}}
+                <div class="sf-related-products__rating">
+                  {{{stars this.rating}}}
+                  <span>({{this.reviewCount}})</span>
+                </div>
+              {{/if}}
+              <div class="sf-related-products__price">
+                {{#if this.compareAtPrice}}
+                  <span class="sf-related-products__price-old">
+                    {{formatPrice this.compareAtPrice}}
+                  </span>
+                {{/if}}
+                <span class="sf-related-products__price-current {{#if this.compareAtPrice}}sf-related-products__price-current--sale{{/if}}">
+                  {{formatPrice this.price}}
+                </span>
+              </div>
+            </div>
+          </a>
+        {{/each}}
+      </div>
+    {{else}}
+      <div class="sf-related-products__empty">
+        <p>Nema sličnih proizvoda</p>
+      </div>
+    {{/if}}
+  </div>
+</section>
+
+{{!-- Styles are in design-sets/starter-flavor/styles/sections.css --}}

@@ -1,0 +1,164 @@
+{{!-- Product Info Section --}}
+{{!-- Displays product name, price, description, variants and add to cart --}}
+
+<section class="sf-section sf-product-info" data-section-id="{{sectionId}}">
+  <div class="sf-product-info__container">
+    {{#if product}}
+      {{!-- Breadcrumb --}}
+      <nav class="sf-product-info__breadcrumb">
+        <a href="/">Početna</a>
+        <span>/</span>
+        <a href="/shop">Shop</a>
+        {{#if product.category}}
+          <span>/</span>
+          <a href="/shop?category={{product.category.slug}}">{{product.category.name}}</a>
+        {{/if}}
+        <span>/</span>
+        <span>{{product.name}}</span>
+      </nav>
+
+      {{!-- Title --}}
+      <h1 class="sf-product-info__title">{{product.name}}</h1>
+
+      {{!-- Rating --}}
+      {{#if product.rating}}
+        <div class="sf-product-info__rating">
+          {{{stars product.rating}}}
+          <span class="sf-product-info__rating-count">
+            ({{product.reviewCount}} recenzija)
+          </span>
+        </div>
+      {{/if}}
+
+      {{!-- Price --}}
+      <div class="sf-product-info__price">
+        {{#if product.compareAtPrice}}
+          <span class="sf-product-info__price-old">
+            {{formatPrice product.compareAtPrice}}
+          </span>
+          <span class="sf-product-info__price-current sf-product-info__price-current--sale">
+            {{formatPrice product.price}}
+          </span>
+          <span class="sf-product-info__price-save">
+            Ušteda {{discountPercentage product.compareAtPrice product.price}}%
+          </span>
+        {{else}}
+          <span class="sf-product-info__price-current">
+            {{formatPrice product.price}}
+          </span>
+        {{/if}}
+      </div>
+
+      {{!-- Short Description --}}
+      {{#if product.shortDescription}}
+        <p class="sf-product-info__short-desc">
+          {{product.shortDescription}}
+        </p>
+      {{/if}}
+
+      {{!-- Stock Status --}}
+      <div class="sf-product-info__stock">
+        {{#if (gt product.stock 0)}}
+          <span class="sf-product-info__stock-badge sf-product-info__stock-badge--in">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Na zalihi
+          </span>
+          {{#if (lte product.stock 5)}}
+            <span class="sf-product-info__stock-low">
+              Samo još {{product.stock}} kom!
+            </span>
+          {{/if}}
+        {{else}}
+          <span class="sf-product-info__stock-badge sf-product-info__stock-badge--out">
+            Nema na zalihi
+          </span>
+        {{/if}}
+      </div>
+
+      {{!-- SKU --}}
+      {{#if product.sku}}
+        <div class="sf-product-info__sku">
+          <span class="sf-product-info__sku-label">SKU:</span>
+          <span class="sf-product-info__sku-value">{{product.sku}}</span>
+        </div>
+      {{/if}}
+
+      {{!-- Variants --}}
+      {{#if product.hasVariants}}
+        <div class="sf-product-info__variants" data-variants='{{json product.variants}}'>
+          {{#each product.variantOptions}}
+            <div class="sf-product-info__variant-group">
+              <label class="sf-product-info__variant-label">{{this.name}}</label>
+              <div class="sf-product-info__variant-options">
+                {{#each this.values}}
+                  <button 
+                    class="sf-product-info__variant-btn {{#if (eq @index 0)}}sf-product-info__variant-btn--active{{/if}}"
+                    data-action="select-variant"
+                    data-variant="{{../this.name}}"
+                    data-value="{{this}}"
+                  >
+                    {{this}}
+                  </button>
+                {{/each}}
+              </div>
+            </div>
+          {{/each}}
+        </div>
+      {{/if}}
+
+      {{!-- Quantity & Add to Cart --}}
+      <div class="sf-product-info__actions">
+        <div class="sf-product-info__quantity">
+          <button class="sf-product-info__qty-btn" data-action="decrease-qty">-</button>
+          <input type="number" data-qty-input value="1" min="1" max="{{or product.stock 99}}" />
+          <button class="sf-product-info__qty-btn" data-action="increase-qty">+</button>
+        </div>
+        <button 
+          class="sf-product-info__add-btn"
+          data-action="add-to-cart"
+          data-product-id="{{product.id}}"
+          data-product-name="{{product.name}}"
+          data-product-price="{{product.price}}"
+          data-product-image="{{#if product.images}}{{product.images.[0].url}}{{/if}}"
+          data-product-slug="{{product.slug}}"
+          {{#unless (gt product.stock 0)}}disabled{{/unless}}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+          Dodaj u košaricu
+        </button>
+      </div>
+
+      {{!-- Description --}}
+      {{#if product.description}}
+        <div class="sf-product-info__description">
+          <h3>Opis proizvoda</h3>
+          <div class="sf-product-info__description-content">
+            {{{renderContent product.description}}}
+          </div>
+        </div>
+      {{/if}}
+
+      {{!-- Specifications --}}
+      {{#if product.specifications}}
+        <div class="sf-product-info__specs">
+          <h3>Specifikacije</h3>
+          <table class="sf-product-info__specs-table">
+            {{#each product.specifications}}
+              <tr>
+                <th>{{this.key}}</th>
+                <td>{{this.value}}</td>
+              </tr>
+            {{/each}}
+          </table>
+        </div>
+      {{/if}}
+
+    {{else}}
+      <div class="sf-product-info__empty">
+        <p>Proizvod nije pronađen</p>
+      </div>
+    {{/if}}
+  </div>
+</section>
+
+{{!-- Styles are in design-sets/starter-flavor/styles/sections.css --}}

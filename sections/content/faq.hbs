@@ -1,0 +1,122 @@
+{{!--
+  FAQ Accordion Section
+  Expandable FAQ items
+  
+  Config:
+  - title: string - Section title
+  - subtitle: string - Section description
+  - items: array - FAQ items
+    - question: string
+    - answer: string
+  - ctaText: string - CTA button text
+  - ctaLink: string - CTA button link
+  
+  DataSource: none (static content from config)
+--}}
+
+<section class="sf-section">
+  <div class="sf-container">
+    {{#if config.title}}
+    <div class="sf-section-header">
+      <h2 class="sf-section-title">{{default config.title "Često postavljana pitanja"}}</h2>
+      {{#if config.subtitle}}
+      <p class="sf-section-description">{{config.subtitle}}</p>
+      {{/if}}
+    </div>
+    {{/if}}
+    
+    <div class="sf-faq-list">
+      {{#if config.items}}
+        {{#each config.items}}
+        <div class="sf-faq-item" data-faq-item>
+          <button class="sf-faq-question" data-faq-toggle>
+            {{this.question}}
+            <svg class="sf-faq-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="sf-faq-answer">
+            {{this.answer}}
+          </div>
+        </div>
+        {{/each}}
+      {{else}}
+        <!-- Default FAQ items -->
+        <div class="sf-faq-item" data-faq-item>
+          <button class="sf-faq-question" data-faq-toggle>
+            Kako mogu naručiti proizvode?
+            <svg class="sf-faq-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="sf-faq-answer">
+            Naručivanje je jednostavno! Odaberite željene proizvode, dodajte ih u košaricu i pratite korake za završetak narudžbe. Prihvaćamo plaćanje karticama, PayPalom i pouzećem.
+          </div>
+        </div>
+        <div class="sf-faq-item" data-faq-item>
+          <button class="sf-faq-question" data-faq-toggle>
+            Koliko traje dostava?
+            <svg class="sf-faq-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="sf-faq-answer">
+            Standardna dostava traje 2-3 radna dana za adrese u Hrvatskoj. Za veće narudžbe iznad 50€ dostava je besplatna.
+          </div>
+        </div>
+        <div class="sf-faq-item" data-faq-item>
+          <button class="sf-faq-question" data-faq-toggle>
+            Mogu li vratiti proizvod?
+            <svg class="sf-faq-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="sf-faq-answer">
+            Da, imate 30 dana za povrat proizvoda. Proizvod mora biti u originalnom pakiranju i nekorišten. Kontaktirajte našu podršku za upute o povratu.
+          </div>
+        </div>
+        <div class="sf-faq-item" data-faq-item>
+          <button class="sf-faq-question" data-faq-toggle>
+            Kako mogu kontaktirati podršku?
+            <svg class="sf-faq-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="sf-faq-answer">
+            Možete nas kontaktirati putem email-a, telefona ili kontakt forme na stranici. Naš tim je dostupan radnim danima od 8:00 do 17:00.
+          </div>
+        </div>
+      {{/if}}
+    </div>
+    
+    {{#if config.ctaText}}
+    <div class="sf-text-center sf-mt-8">
+      <p class="sf-text-muted sf-mb-4">Niste pronašli odgovor na svoje pitanje?</p>
+      <a href="{{default config.ctaLink "/kontakt"}}" class="sf-btn sf-btn-outline">
+        {{config.ctaText}}
+      </a>
+    </div>
+    {{/if}}
+  </div>
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('[data-faq-toggle]').forEach(button => {
+    button.addEventListener('click', function() {
+      const item = this.closest('[data-faq-item]');
+      const isActive = item.classList.contains('active');
+      
+      // Close all other items
+      document.querySelectorAll('[data-faq-item]').forEach(el => {
+        el.classList.remove('active');
+      });
+      
+      // Toggle current item
+      if (!isActive) {
+        item.classList.add('active');
+      }
+    });
+  });
+});
+</script>

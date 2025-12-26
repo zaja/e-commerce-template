@@ -1,0 +1,168 @@
+{
+  "name": "E-commerce",
+  "version": "1.0.0",
+  "description": "Klonirano iz E-commerce",
+  "author": "SvejeDobro",
+  "category": "ecommerce",
+  "tags": [
+    "modern",
+    "clean",
+    "minimal",
+    "responsive",
+    "tailwind-inspired"
+  ],
+  "preview": "assets/preview.png",
+  "compatibility": {
+    "minVersion": "1.0.0",
+    "features": [
+      "products",
+      "variants",
+      "blog",
+      "pages",
+      "menus",
+      "cart",
+      "reviews",
+      "categories"
+    ]
+  },
+  "sectionLibrary": {
+    "enabled": true,
+    "directory": "sections"
+  },
+  "templates": {
+    "header": "templates/header.html",
+    "footer": "templates/footer.html",
+    "layout": "templates/_layout.html"
+  },
+  "sections": {
+    "hero-simple": "sections/hero/simple.hbs",
+    "hero-featured-product": "sections/hero/featured-product.hbs",
+    "hero-split": "sections/hero/split.hbs",
+    "products-grid": "sections/products/grid.hbs",
+    "products-featured": "sections/products/featured.hbs",
+    "products-carousel": "sections/products/carousel.hbs",
+    "products-categories": "sections/products/categories.hbs",
+    "blog-latest": "sections/blog/latest.hbs",
+    "blog-featured": "sections/blog/featured.hbs",
+    "content-features": "sections/content/features.hbs",
+    "content-text-image": "sections/content/text-image.hbs",
+    "content-faq": "sections/content/faq.hbs",
+    "cta-newsletter": "sections/cta/newsletter.hbs",
+    "cta-simple": "sections/cta/simple.hbs",
+    "testimonials-carousel": "sections/testimonials/carousel.hbs",
+    "testimonials-grid": "sections/testimonials/grid.hbs"
+  },
+  "styles": [
+    "styles/base.css",
+    "styles/components.css",
+    "styles/sections.css"
+  ],
+  "customization": {
+    "colors": {
+      "primary": {
+        "default": "#2563EB",
+        "label": "Primarna boja",
+        "description": "Glavna boja branda - koristi se za gumbe i akcente"
+      },
+      "secondary": {
+        "default": "#1E293B",
+        "label": "Sekundarna boja",
+        "description": "Boja za naslove i footer"
+      },
+      "accent": {
+        "default": "#F59E0B",
+        "label": "Akcentna boja",
+        "description": "Boja za badge-eve i highlights"
+      },
+      "background": {
+        "default": "#FFFFFF",
+        "label": "Pozadina"
+      },
+      "surface": {
+        "default": "#F8FAFC",
+        "label": "Površina",
+        "description": "Boja za kartice i sekcije"
+      },
+      "text": {
+        "default": "#0F172A",
+        "label": "Tekst"
+      },
+      "textMuted": {
+        "default": "#64748B",
+        "label": "Sekundarni tekst"
+      }
+    },
+    "fonts": {
+      "heading": {
+        "default": "Inter",
+        "options": [
+          "Inter",
+          "Poppins",
+          "Montserrat",
+          "Plus Jakarta Sans",
+          "DM Sans"
+        ],
+        "googleFont": true,
+        "label": "Font naslova"
+      },
+      "body": {
+        "default": "Inter",
+        "options": [
+          "Inter",
+          "Roboto",
+          "Open Sans",
+          "Lato",
+          "Source Sans Pro"
+        ],
+        "googleFont": true,
+        "label": "Font teksta"
+      }
+    },
+    "layout": {
+      "containerWidth": {
+        "default": "1280px",
+        "options": [
+          "1024px",
+          "1280px",
+          "1440px",
+          "1536px"
+        ],
+        "label": "Širina sadržaja"
+      },
+      "borderRadius": {
+        "default": "0.5rem",
+        "options": [
+          "0",
+          "0.25rem",
+          "0.5rem",
+          "0.75rem",
+          "1rem"
+        ],
+        "label": "Zaobljenost rubova"
+      },
+      "headerStyle": {
+        "default": "transparent",
+        "options": [
+          "transparent",
+          "solid",
+          "sticky"
+        ],
+        "label": "Stil headera"
+      }
+    }
+  },
+  "requiredData": {
+    "workspace": [
+      "name",
+      "logo"
+    ],
+    "products": {
+      "minimum": 4,
+      "message": "Trebate minimalno 4 proizvoda za optimalan prikaz"
+    },
+    "categories": {
+      "minimum": 3,
+      "message": "Preporučamo minimalno 3 kategorije"
+    }
+  }
+}

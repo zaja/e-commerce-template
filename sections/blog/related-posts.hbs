@@ -1,0 +1,51 @@
+{{!-- Related Posts Section --}}
+{{!-- Displays related blog posts --}}
+
+<section class="sds-section sds-related-posts" data-section-id="{{sectionId}}">
+  <div class="sds-container">
+    <div class="sds-related-posts__header">
+      <h2 class="sds-related-posts__title">
+        {{or config.title "Povezani članci"}}
+      </h2>
+      {{#if config.subtitle}}
+        <p class="sds-related-posts__subtitle">{{config.subtitle}}</p>
+      {{/if}}
+    </div>
+
+    {{#if relatedPosts.length}}
+      <div class="sds-related-posts__grid">
+        {{#each relatedPosts}}
+          <a href="{{postUrl this.slug}}" class="sds-related-posts__item">
+            <div class="sds-related-posts__image">
+              {{responsiveImage this.featuredImage alt=this.title class="sds-related-posts__img" loading="lazy" sizes="(max-width: 768px) 100vw, 33vw"}}
+            </div>
+            <div class="sds-related-posts__content">
+              {{#if this.tags.length}}
+                <span class="sds-related-posts__tag">{{this.tags.[0].name}}</span>
+              {{/if}}
+              <h3 class="sds-related-posts__item-title">{{this.title}}</h3>
+              <div class="sds-related-posts__meta">
+                <span>{{formatDate this.publishedAt "DD.MM.YYYY."}}</span>
+                {{#if this.author}}
+                  <span>•</span>
+                  <span>{{this.author.name}}</span>
+                {{/if}}
+              </div>
+            </div>
+          </a>
+        {{/each}}
+      </div>
+
+      <div class="sds-related-posts__more">
+        <a href="/blog" class="sds-related-posts__more-link">
+          Pogledaj sve članke
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+      </div>
+    {{else}}
+      <div class="sds-related-posts__empty">
+        <p>Nema povezanih članaka</p>
+      </div>
+    {{/if}}
+  </div>
+</section>

@@ -1,0 +1,49 @@
+{{!--
+  Newsletter CTA Section
+  Email signup form with optional background
+  
+  Config:
+  - title: string - Section title
+  - description: string - Section description
+  - placeholder: string - Input placeholder text
+  - buttonText: string - Submit button text
+  - disclaimer: string - Privacy disclaimer text
+  - backgroundColor: string - Section background color
+  
+  DataSource: none
+--}}
+
+<section class="sf-section">
+  <div class="sf-container">
+    <div class="sf-newsletter" style="{{#if config.backgroundColor}}background-color: {{config.backgroundColor}};{{/if}}">
+      <div class="sf-newsletter-content">
+        <h2 class="sf-newsletter-title">{{default config.title "Pridruži se našoj listi"}}</h2>
+        <p class="sf-newsletter-description">
+          {{default config.description "Pretplatite se na naš newsletter i saznajte prvi o novim proizvodima, akcijama i ekskluzivnim ponudama."}}
+        </p>
+        
+        <form class="sf-newsletter-form" data-newsletter-form>
+          <input 
+            type="email" 
+            name="email" 
+            class="sf-input" 
+            placeholder="{{default config.placeholder "Vaša email adresa"}}"
+            required
+            autocomplete="email"
+          >
+          <button type="submit" class="sf-btn sf-btn-primary">
+            {{default config.buttonText "Pretplati se"}}
+          </button>
+        </form>
+        
+        {{#if config.disclaimer}}
+        <p class="sf-newsletter-disclaimer">{{config.disclaimer}}</p>
+        {{else}}
+        <p class="sf-newsletter-disclaimer">
+          Prijavom pristajete na primanje promotivnih emailova. Odjava je moguća u bilo kojem trenutku.
+        </p>
+        {{/if}}
+      </div>
+    </div>
+  </div>
+</section>
