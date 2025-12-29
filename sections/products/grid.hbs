@@ -1,15 +1,13 @@
 {{!--
   Products Grid Section
-  Displays products in a responsive grid
+  Displays products in a responsive grid - uses shared product-card partial
   
   Config:
   - title: string - Section title
   - subtitle: string - Section description
-  - columns: number - Grid columns (3 or 4)
-  - showCategory: boolean - Show product category
-  - showPrice: boolean - Show product price
-  - showRating: boolean - Show product rating
-  - showAddToCart: boolean - Show add to cart button on hover
+  - showDescription: boolean - Show product description (default: false for home)
+  - showStock: boolean - Show stock status (default: false for home)
+  - showAddToCart: boolean - Show add to cart button (default: true)
   - ctaText: string - View all button text
   - ctaLink: string - View all button link
   - limit: number - Number of products to show
@@ -17,7 +15,7 @@
   DataSource: { type: "products", filter: "latest", limit: 8 }
 --}}
 
-<section class="sf-section sf-products-section">
+<section class="sf-section sf-products-section" data-grid-cols="{{default workspace.homeGridColumns 4}}">
   <div class="sf-container">
     {{#if config.title}}
     <div class="sf-section-header">
@@ -28,88 +26,15 @@
     </div>
     {{/if}}
     
-    {{#if products.length}}
-    <div class="sf-products-grid {{#eq config.columns 3}}sf-products-grid-3{{/eq}}">
-      {{#each products}}
-      <article class="sf-product-card">
-        <!-- Product Image -->
-        <div class="sf-product-image">
-          <a href="{{productUrl this.slug}}">
-            {{responsiveImage this.featuredImage alt=this.name class="sf-product-img" loading="lazy" sizes="(max-width: 768px) 50vw, 25vw"}}
-          </a>
-          
-          <!-- Badges -->
-          <div class="sf-product-badges">
-            {{#if this.compareAtPrice}}
-            <span class="sf-badge sf-badge-sale">Akcija</span>
-            {{/if}}
-            {{#if this.isNew}}
-            <span class="sf-badge sf-badge-new">Novo</span>
-            {{/if}}
-          </div>
-          
-          <!-- Quick Actions -->
-          {{#if ../config.showAddToCart}}
-          <div class="sf-product-actions">
-            <button class="sf-product-action-btn" data-add-to-cart="{{this.id}}" aria-label="Dodaj u košaricu">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/>
-                <path d="M3 6h18"/>
-                <path d="M16 10a4 4 0 0 1-8 0"/>
-              </svg>
-            </button>
-            <button class="sf-product-action-btn" data-quick-view="{{this.id}}" aria-label="Brzi pregled">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
-                <circle cx="12" cy="12" r="3"/>
-              </svg>
-            </button>
-          </div>
-          {{/if}}
-        </div>
-        
-        <!-- Product Info -->
-        <div class="sf-product-body">
-          {{#if ../config.showCategory}}
-          {{#if this.category}}
-          <span class="sf-product-category">{{this.category.name}}</span>
-          {{/if}}
-          {{/if}}
-          
-          <h3 class="sf-product-title">
-            <a href="{{productUrl this.slug}}">{{this.name}}</a>
-          </h3>
-          
-          {{#if ../config.showRating}}
-          {{#if this.averageRating}}
-          <div class="sf-product-rating">
-            <div class="sf-rating-stars">
-              {{#times 5}}
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="{{#if (lte @index ../this.averageRating)}}currentColor{{else}}none{{/if}}" stroke="currentColor" stroke-width="2">
-                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-              </svg>
-              {{/times}}
-            </div>
-            <span class="sf-rating-count">({{this.reviewCount}})</span>
-          </div>
-          {{/if}}
-          {{/if}}
-          
-          {{#if ../config.showPrice}}
-          <div class="sf-product-price">
-            <span class="sf-price-current">{{formatPrice this.price}}</span>
-            {{#if this.compareAtPrice}}
-            <span class="sf-price-original">{{formatPrice this.compareAtPrice}}</span>
-            {{/if}}
-          </div>
-          {{/if}}
-        </div>
-      </article>
-      {{/each}}
-    </div>
+    {{> product-grid 
+        products=products 
+        showDescription=(default config.showDescription true)
+        showStock=(default config.showStock false)
+        showAddToCart=(default config.showAddToCart true)
+    }}
     
     {{#if config.ctaText}}
-    <div class="sf-products-footer">
+    <div class="sf-section-footer">
       <a href="{{default config.ctaLink "/shop"}}" class="sf-btn sf-btn-outline sf-btn-lg">
         {{config.ctaText}}
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -118,9 +43,6 @@
         </svg>
       </a>
     </div>
-    {{/if}}
-    {{else}}
-    {{{emptyState "products"}}}
     {{/if}}
   </div>
 </section>

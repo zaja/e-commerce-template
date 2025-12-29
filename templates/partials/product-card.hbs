@@ -1,0 +1,102 @@
+{{!--
+  Reusable Product Card Partial
+  Used in: shop listing, products grid, related products
+  
+  Expected context:
+  - product: The product object
+  - showDescription: boolean (optional)
+  - showStock: boolean (optional)
+  - showAddToCart: boolean (optional)
+--}}
+
+<article class="sf-product-card">
+  <div class="sf-product-image-wrapper">
+    <a href="{{productUrl product.slug}}" class="sf-product-image-link">
+      {{responsiveImage product.featuredImage alt=product.name class="sf-product-img" loading="lazy" sizes="(max-width: 768px) 50vw, 25vw"}}
+    </a>
+    
+    {{!-- Badges --}}
+    <div class="sf-product-badges">
+      {{#if product.compareAtPrice}}
+      <span class="sf-badge sf-badge-sale">AKCIJA</span>
+      {{/if}}
+      {{#if product.isNew}}
+      <span class="sf-badge sf-badge-new">NOVO</span>
+      {{/if}}
+    </div>
+  </div>
+  
+  <div class="sf-product-info">
+    {{!-- Category --}}
+    {{#if product.category}}
+    <a href="/shop/category/{{product.category.slug}}" class="sf-product-category">{{product.category.name}}</a>
+    {{/if}}
+    
+    {{!-- Title --}}
+    <h3 class="sf-product-title">
+      <a href="{{productUrl product.slug}}">{{product.name}}</a>
+    </h3>
+    
+    {{!-- Short Description --}}
+    {{#if showDescription}}
+    {{#if (or product.shortDescription product.description)}}
+    <p class="sf-product-description">{{truncateWords (or product.shortDescription product.description) 7}}</p>
+    {{/if}}
+    {{/if}}
+    
+    {{!-- Rating --}}
+    {{#if product.reviewCount}}
+    <div class="sf-product-rating">
+      <span class="sf-stars">{{{stars product.averageRating}}}</span>
+      <span class="sf-rating-count">({{product.reviewCount}})</span>
+    </div>
+    {{/if}}
+    
+    {{!-- Footer: Price & Stock --}}
+    <div class="sf-product-footer">
+      <div class="sf-product-price">
+        {{#if product.compareAtPrice}}
+        <span class="sf-price-sale">{{formatPrice product.price}}</span>
+        <span class="sf-price-original">{{formatPrice product.compareAtPrice}}</span>
+        {{else}}
+        <span class="sf-price-regular">{{formatPrice product.price}}</span>
+        {{/if}}
+      </div>
+      
+      {{#if showStock}}
+      <div class="sf-product-stock {{#if product.inStock}}sf-in-stock{{else}}sf-out-of-stock{{/if}} {{#if (and product.inStock (lt product.stockQuantity 5))}}sf-low-stock{{/if}}">
+        {{#if product.inStock}}
+          {{#if (lt product.stockQuantity 5)}}
+          <span>Još {{product.stockQuantity}} kom</span>
+          {{else}}
+          <span>Na lageru</span>
+          {{/if}}
+        {{else}}
+        <span>Nema na lageru</span>
+        {{/if}}
+      </div>
+      {{/if}}
+    </div>
+    
+    {{!-- Add to Cart Button --}}
+    {{#if showAddToCart}}
+    <div class="sf-product-action">
+      {{#if product.inStock}}
+        {{#if product.hasVariants}}
+        <a href="{{productUrl product.slug}}" class="sf-btn sf-btn-primary sf-btn-sm sf-btn-full">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          Odaberi opcije
+        </a>
+        {{else}}
+        <button type="button" class="sf-btn sf-btn-primary sf-btn-sm sf-btn-full" data-add-to-cart="{{product.id}}">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+          Ubaci u košaricu
+        </button>
+        {{/if}}
+      {{else}}
+      <button type="button" class="sf-btn sf-btn-disabled sf-btn-sm sf-btn-full" disabled>Nema na lageru</button>
+      {{/if}}
+    </div>
+    {{/if}}
+  </div>
+</article>

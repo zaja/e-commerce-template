@@ -4,19 +4,6 @@
 <section class="sf-section sf-product-info" data-section-id="{{sectionId}}">
   <div class="sf-product-info__container">
     {{#if product}}
-      {{!-- Breadcrumb --}}
-      <nav class="sf-product-info__breadcrumb">
-        <a href="/">Početna</a>
-        <span>/</span>
-        <a href="/shop">Shop</a>
-        {{#if product.category}}
-          <span>/</span>
-          <a href="/shop?category={{product.category.slug}}">{{product.category.name}}</a>
-        {{/if}}
-        <span>/</span>
-        <span>{{product.name}}</span>
-      </nav>
-
       {{!-- Title --}}
       <h1 class="sf-product-info__title">{{product.name}}</h1>
 

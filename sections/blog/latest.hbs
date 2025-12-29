@@ -1,77 +1,205 @@
 {{!--
-  Latest Blog Posts Section
-  Displays recent blog posts in a grid
+  Latest Blog Posts Section - Magazine Layout
+  
+  Layout:
+  1. Hero Section: Latest post (large, right) + 2 posts (small, left)
+  2. Featured Section: 4 posts marked as "featured"
+  3. Latest Section: All remaining posts in grid
   
   Config:
   - title: string - Section title
-  - subtitle: string - Section description
   - showAuthor: boolean - Show post author
   - showDate: boolean - Show publish date
   - showExcerpt: boolean - Show post excerpt
-  - ctaText: string - View all button text
-  - ctaLink: string - View all button link
-  - limit: number - Number of posts to show
+  - limit: number - Number of posts in "Najnovije" section
   
-  DataSource: { type: "posts", filter: "latest", limit: 3 }
+  Data: heroPosts (3), featuredPosts (4), posts (rest)
 --}}
 
-<section class="sf-section">
+<section class="sf-section sf-blog-index">
   <div class="sf-container">
-    {{#if config.title}}
-    <div class="sf-section-header">
-      <h2 class="sf-section-title">{{default config.title "Iz našeg bloga"}}</h2>
-      {{#if config.subtitle}}
-      <p class="sf-section-description">{{config.subtitle}}</p>
-      {{/if}}
-    </div>
-    {{/if}}
     
-    {{#if posts.length}}
-    <div class="sf-blog-grid">
-      {{#each posts}}
-      <article class="sf-blog-card">
-        <!-- Post Image -->
-        <a href="{{postUrl this.slug}}" class="sf-blog-image">
-          {{responsiveImage this.featuredImage alt=this.title class="sf-blog-img" loading="lazy" sizes="(max-width: 768px) 100vw, 33vw"}}
-        </a>
-        
-        <!-- Post Content -->
-        <div class="sf-blog-body">
-          {{#if (or (and config.showDate this.publishedAt) this.tags.length)}}
-          <div class="sf-blog-meta">
-            {{#if this.tags.length}}
-            <span class="sf-blog-tag">{{this.tags.[0].tag.name}}</span>
-            {{/if}}
-            {{#if (and config.showDate this.publishedAt)}}
-            <span>{{formatDate this.publishedAt "DD.MM.YYYY."}}</span>
-            {{/if}}
-          </div>
-          {{/if}}
-          
-          <h3 class="sf-blog-title">
-            <a href="{{postUrl this.slug}}">{{this.title}}</a>
-          </h3>
-          
-          {{#if this.excerpt}}
-          <p class="sf-blog-excerpt">{{truncate this.excerpt 150}}</p>
-          {{/if}}
-          
-          {{#if this.author}}
-          <div class="sf-blog-author">
-            <div class="sf-blog-author-avatar">
+    {{!-- ============================================ --}}
+    {{!-- HERO SECTION: 3 columns layout --}}
+    {{!-- ============================================ --}}
+    {{#if heroPosts.length}}
+    <div class="sf-blog-hero sf-blog-hero--3col">
+      {{!-- Left: 2 smaller posts --}}
+      <div class="sf-blog-hero__side">
+        {{#each heroPosts}}
+        {{#if (lt @index 2)}}
+        <article class="sf-blog-hero__small">
+          <a href="{{postUrl this.slug}}" class="sf-blog-hero__small-image">
+            {{responsiveImage this.featuredImage alt=this.title class="sf-blog-hero__img" loading="eager" sizes="(max-width: 768px) 100vw, 25vw"}}
+          </a>
+          <div class="sf-blog-hero__small-content">
+            <h3 class="sf-blog-hero__small-title">
+              <a href="{{postUrl this.slug}}">{{this.title}}</a>
+            </h3>
+            {{#if this.author}}
+            <div class="sf-blog-meta">
               {{#if this.author.image}}
-              <img src="{{this.author.image}}" alt="{{this.author.name}}">
-              {{else}}
-              {{firstLetter this.author.name}}
+              <img src="{{this.author.image}}" alt="{{this.author.name}}" class="sf-blog-meta__avatar">
+              {{/if}}
+              <span class="sf-blog-meta__author">{{this.author.name}}</span>
+              {{#if this.publishedAt}}
+              <span class="sf-blog-meta__sep">—</span>
+              <span class="sf-blog-meta__date">{{formatDate this.publishedAt format="DD. MMM YYYY."}}</span>
               {{/if}}
             </div>
-            <span class="sf-blog-author-name">{{this.author.name}}</span>
+            {{/if}}
+          </div>
+        </article>
+        {{/if}}
+        {{/each}}
+      </div>
+      
+      {{!-- Center: Main/latest post (larger) --}}
+      {{#with (lookup heroPosts 2)}}
+      {{#if this}}
+      <article class="sf-blog-hero__main">
+        <a href="{{postUrl this.slug}}" class="sf-blog-hero__main-image">
+          {{responsiveImage this.featuredImage alt=this.title class="sf-blog-hero__img" loading="eager" sizes="(max-width: 768px) 100vw, 50vw"}}
+        </a>
+        <div class="sf-blog-hero__main-content">
+          <h2 class="sf-blog-hero__main-title">
+            <a href="{{postUrl this.slug}}">{{this.title}}</a>
+          </h2>
+          {{#if this.excerpt}}
+          <p class="sf-blog-hero__main-excerpt">{{truncate this.excerpt 200}}</p>
+          {{/if}}
+          {{#if this.author}}
+          <div class="sf-blog-meta">
+            {{#if this.author.image}}
+            <img src="{{this.author.image}}" alt="{{this.author.name}}" class="sf-blog-meta__avatar">
+            {{/if}}
+            <span class="sf-blog-meta__author">{{this.author.name}}</span>
+            {{#if this.publishedAt}}
+            <span class="sf-blog-meta__sep">—</span>
+            <span class="sf-blog-meta__date">{{formatDate this.publishedAt format="DD. MMM YYYY."}}</span>
+            {{/if}}
           </div>
           {{/if}}
         </div>
       </article>
-      {{/each}}
+      {{/if}}
+      {{/with}}
+      
+      {{!-- Right: Featured/Istaknuto posts --}}
+      {{#if featuredPosts.length}}
+      <div class="sf-blog-hero__featured">
+        <h3 class="sf-blog-hero__featured-title">Istaknuto</h3>
+        {{#each featuredPosts}}
+        <article class="sf-blog-hero__featured-item">
+          <div class="sf-blog-hero__featured-content">
+            <h4 class="sf-blog-hero__featured-item-title">
+              <a href="{{postUrl this.slug}}">{{this.title}}</a>
+            </h4>
+            {{#if this.author}}
+            <div class="sf-blog-meta sf-blog-meta--small">
+              {{#if this.author.image}}
+              <img src="{{this.author.image}}" alt="{{this.author.name}}" class="sf-blog-meta__avatar">
+              {{/if}}
+              <span class="sf-blog-meta__author">{{this.author.name}}</span>
+              {{#if this.publishedAt}}
+              <span class="sf-blog-meta__sep">—</span>
+              <span class="sf-blog-meta__date">{{formatDate this.publishedAt format="DD. MMM YYYY."}}</span>
+              {{/if}}
+            </div>
+            {{/if}}
+          </div>
+          <a href="{{postUrl this.slug}}" class="sf-blog-hero__featured-image">
+            {{responsiveImage this.featuredImage alt=this.title class="sf-blog-hero__featured-img" loading="lazy" sizes="80px"}}
+          </a>
+        </article>
+        {{/each}}
+      </div>
+      {{/if}}
     </div>
+    {{/if}}
+    
+    {{!-- ============================================ --}}
+    {{!-- LATEST SECTION: Ostali postovi --}}
+    {{!-- ============================================ --}}
+    {{#if posts.length}}
+    <div class="sf-blog-section">
+      <h2 class="sf-blog-section__title">Najnovije</h2>
+      <div class="sf-blog-grid sf-blog-grid--4col">
+        {{#each posts}}
+        <article class="sf-blog-card">
+          <a href="{{postUrl this.slug}}" class="sf-blog-image">
+            {{responsiveImage this.featuredImage alt=this.title class="sf-blog-img" loading="lazy" sizes="(max-width: 768px) 100vw, 25vw"}}
+          </a>
+          
+          <div class="sf-blog-body">
+            <h3 class="sf-blog-title">
+              <a href="{{postUrl this.slug}}">{{this.title}}</a>
+            </h3>
+            
+            {{#if this.excerpt}}
+            <p class="sf-blog-excerpt">{{truncate this.excerpt 100}}</p>
+            {{/if}}
+            
+            {{#if this.author}}
+            <div class="sf-blog-meta sf-blog-meta--small">
+              {{#if this.author.image}}
+              <img src="{{this.author.image}}" alt="{{this.author.name}}" class="sf-blog-meta__avatar">
+              {{/if}}
+              <span class="sf-blog-meta__author">{{this.author.name}}</span>
+              {{#if this.publishedAt}}
+              <span class="sf-blog-meta__sep">—</span>
+              <span class="sf-blog-meta__date">{{formatDate this.publishedAt format="DD. MMM YYYY."}}</span>
+              {{/if}}
+            </div>
+            {{/if}}
+          </div>
+        </article>
+        {{/each}}
+      </div>
+    </div>
+    {{/if}}
+    
+    {{!-- Pagination --}}
+    {{#if pagination}}
+    {{#if (gt pagination.totalPages 1)}}
+    <nav class="sf-blog-pagination" aria-label="Paginacija">
+      <div class="sf-blog-pagination__info">
+        Prikazano {{pagination.from}}-{{pagination.to}} od {{pagination.total}} članaka
+      </div>
+      <div class="sf-blog-pagination__nav">
+        {{#if pagination.hasPrev}}
+        <a href="{{blogPaginationUrl pagination.prevPage}}" class="sf-blog-pagination__btn sf-blog-pagination__btn--prev">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M15 18l-6-6 6-6"/>
+          </svg>
+          Prethodna
+        </a>
+        {{/if}}
+        
+        <div class="sf-blog-pagination__pages">
+          {{#each pagination.pages}}
+          {{#if this.isEllipsis}}
+          <span class="sf-blog-pagination__ellipsis">...</span>
+          {{else}}
+          <a href="{{blogPaginationUrl this.number}}" class="sf-blog-pagination__page{{#if this.isCurrent}} sf-blog-pagination__page--current{{/if}}">
+            {{this.number}}
+          </a>
+          {{/if}}
+          {{/each}}
+        </div>
+        
+        {{#if pagination.hasNext}}
+        <a href="{{blogPaginationUrl pagination.nextPage}}" class="sf-blog-pagination__btn sf-blog-pagination__btn--next">
+          Sljedeća
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 18l6-6-6-6"/>
+          </svg>
+        </a>
+        {{/if}}
+      </div>
+    </nav>
+    {{/if}}
+    {{/if}}
     
     {{#if config.ctaText}}
     <div class="sf-products-footer">
@@ -84,8 +212,10 @@
       </a>
     </div>
     {{/if}}
-    {{else}}
+    
+    {{!-- Empty State --}}
+    {{#unless (or heroPosts.length featuredPosts.length posts.length)}}
     {{{emptyState "posts"}}}
-    {{/if}}
+    {{/unless}}
   </div>
 </section>

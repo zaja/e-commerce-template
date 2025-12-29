@@ -380,6 +380,7 @@
 .sf-max-w-xl { max-width: 36rem; }
 .sf-max-w-2xl { max-width: 42rem; }
 .sf-max-w-3xl { max-width: 48rem; }
+.sf-max-w-prose { max-width: 85%; }
 
 /* Aspect ratios */
 .sf-aspect-square { aspect-ratio: 1 / 1; }

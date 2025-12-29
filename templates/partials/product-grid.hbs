@@ -1,0 +1,24 @@
+{{!--
+  Reusable Product Grid Partial
+  Used in: shop listing, products grid section, related products
+  
+  Expected context:
+  - products: Array of product objects
+  - gridColumns: number (default 4) - columns on desktop
+  - showDescription: boolean (default true)
+  - showStock: boolean (default true)
+  - showAddToCart: boolean (default true)
+  - gridClass: string (optional) - additional CSS class
+--}}
+
+{{#if products.length}}
+<div class="sf-products-grid {{gridClass}}" data-products-container>
+  {{#each products}}
+  {{> product-card product=this showDescription=../showDescription showStock=../showStock showAddToCart=../showAddToCart}}
+  {{/each}}
+</div>
+{{else}}
+<div class="sf-empty-state">
+  <p>Nema proizvoda za prikaz</p>
+</div>
+{{/if}}

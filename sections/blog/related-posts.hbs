@@ -13,26 +13,49 @@
     </div>
 
     {{#if relatedPosts.length}}
-      <div class="sds-related-posts__grid">
+      <div class="sf-blog-grid">
         {{#each relatedPosts}}
-          <a href="{{postUrl this.slug}}" class="sds-related-posts__item">
-            <div class="sds-related-posts__image">
-              {{responsiveImage this.featuredImage alt=this.title class="sds-related-posts__img" loading="lazy" sizes="(max-width: 768px) 100vw, 33vw"}}
-            </div>
-            <div class="sds-related-posts__content">
-              {{#if this.tags.length}}
-                <span class="sds-related-posts__tag">{{this.tags.[0].name}}</span>
+          <article class="sf-blog-card">
+            <a href="{{postUrl this.slug}}" class="sf-blog-image">
+              {{responsiveImage this.featuredImage alt=this.title class="sf-blog-img" loading="lazy" sizes="(max-width: 768px) 100vw, 33vw"}}
+            </a>
+            <div class="sf-blog-body">
+              {{#if this.tags}}
+                <div class="sf-blog-tags">
+                  {{#each this.tags}}
+                    <span class="sf-blog-tag">{{this.name}}</span>
+                  {{/each}}
+                </div>
               {{/if}}
-              <h3 class="sds-related-posts__item-title">{{this.title}}</h3>
-              <div class="sds-related-posts__meta">
-                <span>{{formatDate this.publishedAt "DD.MM.YYYY."}}</span>
-                {{#if this.author}}
-                  <span>•</span>
-                  <span>{{this.author.name}}</span>
-                {{/if}}
-              </div>
+              
+              {{#if this.publishedAt}}
+                <div class="sf-blog-date">
+                  {{formatDate this.publishedAt format="DD. MMMM YYYY."}} u {{formatDate this.publishedAt format="HH:mm"}}
+                </div>
+              {{/if}}
+              
+              <h3 class="sf-blog-title">
+                <a href="{{postUrl this.slug}}">{{this.title}}</a>
+              </h3>
+              
+              {{#if this.excerpt}}
+                <p class="sf-blog-excerpt">{{truncate this.excerpt 150}}</p>
+              {{/if}}
+              
+              {{#if this.author}}
+                <div class="sf-blog-author">
+                  <div class="sf-blog-author-avatar">
+                    {{#if this.author.image}}
+                      <img src="{{this.author.image}}" alt="{{this.author.name}}">
+                    {{else}}
+                      {{firstLetter this.author.name}}
+                    {{/if}}
+                  </div>
+                  <span class="sf-blog-author-name">{{this.author.name}}</span>
+                </div>
+              {{/if}}
             </div>
-          </a>
+          </article>
         {{/each}}
       </div>
 

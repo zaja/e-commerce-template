@@ -1,0 +1,444 @@
+{{!--
+  Shop Listing Section - New Design
+  Full shop page with sidebar filters, sorting, grid/list view and pagination
+  
+  Config:
+  - title: string - Page title (default: "Trgovina")
+  - subtitle: string - Page subtitle
+  - showBreadcrumbs: boolean - Show breadcrumbs navigation
+  - showResultCount: boolean - Show "Prikazano X od Y" text
+  - showSorting: boolean - Show sort dropdown
+  - showViewToggle: boolean - Show grid/list view toggle
+  
+  Data (from workspace settings + URL params):
+  - products: array - Products for current page
+  - categories: array - All categories with product counts
+  - pagination: object - { page, perPage, total, totalPages }
+  - filters: object - Active filters { category, minPrice, maxPrice, onSale, inStock, search }
+  - sort: string - Current sort option
+  - workspace: object - Workspace with shop settings
+  - categoryPage: object - Current category if on category page (for showing subcategories)
+  
+  DataSource: { type: "shop-listing" }
+--}}
+
+<section class="sf-section sf-shop-listing {{#unless workspace.shopShowFilters}}sf-shop-no-filters{{/unless}}" data-grid-cols="{{workspace.shopGridColumns}}">
+  <div class="sf-container">
+    
+    {{!-- Page Header Card - only show on main shop page, not on category pages --}}
+    {{#unless categoryPage}}
+    <div class="sf-shop-header-card">
+      <h1 class="sf-shop-title">{{default config.title "Trgovina"}}</h1>
+      <p class="sf-shop-subtitle">{{default config.subtitle "Pregledajte našu široku ponudu kvalitetnih proizvoda"}}</p>
+      {{#if filters.search}}
+      <p class="sf-shop-search-info">Rezultati pretrage za: <strong>"{{filters.search}}"</strong></p>
+      {{/if}}
+    </div>
+    {{/unless}}
+    
+    <div class="sf-shop-layout">
+      
+      {{!-- Mobile Filter Overlay --}}
+      <div class="sf-filter-overlay" data-filter-overlay></div>
+      
+      {{!-- Mobile Filter Toggle Button --}}
+      {{#if workspace.shopShowFilters}}
+      <button type="button" class="sf-mobile-filter-btn" data-action="toggle-filters">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+        </svg>
+        Filteri
+        {{#if hasActiveFilters}}
+        <span class="sf-filter-badge">{{activeFilterCount}}</span>
+        {{/if}}
+      </button>
+      {{/if}}
+      
+      {{!-- Sidebar Filters --}}
+      {{#if workspace.shopShowFilters}}
+      <aside class="sf-filters-sidebar" data-filters-sidebar>
+        {{!-- Mobile Close Button --}}
+        <button type="button" class="sf-filter-close-btn" data-action="close-filters">✕ Zatvori</button>
+        
+        <h3 class="sf-filters-title">Filteri</h3>
+        
+        <form class="sf-shop-filters" method="GET" action="/shop">
+          
+          {{!-- Categories Filter (radio style - single selection) --}}
+          {{#if workspace.shopShowCategories}}
+          {{#if categories.length}}
+          <div class="sf-filter-group">
+            <label class="sf-filter-option">
+              <input type="radio" name="category" value="" {{#unless filters.category}}checked{{/unless}}>
+              <span class="sf-filter-option-label">Sve kategorije</span>
+              <span class="sf-filter-option-count">({{totalProducts}})</span>
+            </label>
+            {{#each categories}}
+            {{#if this._count.products}}
+            <label class="sf-filter-option">
+              <input type="radio" name="category" value="{{this.slug}}" {{#if (eq ../filters.category this.slug)}}checked{{/if}}>
+              <span class="sf-filter-option-label">{{this.name}}</span>
+              <span class="sf-filter-option-count">({{this._count.products}})</span>
+            </label>
+            {{!-- Show subcategories if on this category OR on one of its subcategories --}}
+            {{#if (or (eq ../filters.category this.slug) (eq ../filters.parentCategorySlug this.slug))}}
+            {{#if this.children.length}}
+            <div class="sf-filter-subcategories">
+              {{#each this.children}}
+              {{#if this._count.products}}
+              <label class="sf-filter-option sf-filter-option-child">
+                <input type="radio" name="category" value="{{this.slug}}" {{#if (eq ../../filters.category this.slug)}}checked{{/if}}>
+                <span class="sf-filter-option-label">{{this.name}}</span>
+                <span class="sf-filter-option-count">({{this._count.products}})</span>
+              </label>
+              {{/if}}
+              {{/each}}
+            </div>
+            {{/if}}
+            {{/if}}
+            {{/if}}
+            {{/each}}
+          </div>
+          {{/if}}
+          {{/if}}
+            
+            {{!-- Price Filter with Slider --}}
+          {{#if workspace.shopShowPriceFilter}}
+          <div class="sf-filter-group">
+            <div class="sf-price-filter-label">Cijena od <span class="sf-price-value-min">{{#if filters.minPrice}}{{filters.minPrice}}{{else}}0{{/if}}</span> do <span class="sf-price-value-max">{{#if filters.maxPrice}}{{filters.maxPrice}}{{else}}{{priceRange.max}}{{/if}}</span> {{workspace.currency}}</div>
+            <div class="sf-price-slider-container" data-min="0" data-max="{{priceRange.max}}" data-current-min="{{filters.minPrice}}" data-current-max="{{filters.maxPrice}}">
+              <div class="sf-price-slider-track">
+                <div class="sf-price-slider-range"></div>
+                <input type="range" class="sf-price-slider sf-price-slider-min" min="0" max="{{priceRange.max}}" value="{{#if filters.minPrice}}{{filters.minPrice}}{{else}}0{{/if}}" step="1">
+                <input type="range" class="sf-price-slider sf-price-slider-max" min="0" max="{{priceRange.max}}" value="{{#if filters.maxPrice}}{{filters.maxPrice}}{{else}}{{priceRange.max}}{{/if}}" step="1">
+              </div>
+              <input type="hidden" name="minPrice" value="{{filters.minPrice}}">
+              <input type="hidden" name="maxPrice" value="{{filters.maxPrice}}">
+            </div>
+          </div>
+          {{/if}}
+          
+          {{!-- Stock Filter --}}
+          {{#if workspace.shopShowStockFilter}}
+          <div class="sf-filter-group">
+            <label class="sf-filter-option">
+              <input type="checkbox" name="inStock" value="true" {{#if filters.inStock}}checked{{/if}}>
+              <span class="sf-filter-option-label">Samo na lageru</span>
+              <span class="sf-filter-option-count">({{inStockCount}})</span>
+            </label>
+          </div>
+          {{/if}}
+          
+          {{!-- On Sale Filter --}}
+          <div class="sf-filter-group">
+            <label class="sf-filter-option sf-filter-option-sale">
+              <input type="checkbox" name="onSale" value="true" {{#if filters.onSale}}checked{{/if}}>
+              <span class="sf-filter-option-label">Proizvodi na akciji</span>
+              <svg class="sf-sale-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="5" x2="5" y2="19"></line>
+                <circle cx="6.5" cy="6.5" r="2.5"></circle>
+                <circle cx="17.5" cy="17.5" r="2.5"></circle>
+              </svg>
+            </label>
+          </div>
+          
+          {{!-- Preserve current sort in form --}}
+          {{#if sort}}
+          <input type="hidden" name="sort" value="{{sort}}">
+          {{/if}}
+          
+          {{!-- Apply Filters Button --}}
+          <button type="submit" class="sf-filter-apply-btn">Primijeni filtere</button>
+          
+          {{!-- Clear Filters --}}
+          {{#if hasActiveFilters}}
+          <a href="/shop" class="sf-filter-clear-link">Očisti filtere</a>
+          {{/if}}
+          
+        </form>
+      </aside>
+      {{/if}}
+      
+      {{!-- Main Content --}}
+      <div class="sf-shop-main">
+        
+        {{!-- Sorting Bar Card --}}
+        <div class="sf-sorting-card">
+          {{!-- Result Count --}}
+          {{#if config.showResultCount}}
+          <div class="sf-products-count">
+            {{#if products.length}}
+            Prikazano <strong>{{pagination.from}}</strong> od <strong>{{pagination.total}}</strong> proizvoda
+            {{else}}
+            Nema proizvoda
+            {{/if}}
+          </div>
+          {{/if}}
+          
+          <div class="sf-products-controls">
+            {{!-- View Toggle --}}
+            {{#if config.showViewToggle}}
+            <div class="sf-view-toggle">
+              <button type="button" class="sf-view-btn sf-view-btn-active" data-view="grid" title="Grid prikaz">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect width="7" height="7" x="3" y="3" rx="1"/>
+                  <rect width="7" height="7" x="14" y="3" rx="1"/>
+                  <rect width="7" height="7" x="14" y="14" rx="1"/>
+                  <rect width="7" height="7" x="3" y="14" rx="1"/>
+                </svg>
+              </button>
+              <button type="button" class="sf-view-btn" data-view="list" title="List prikaz">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="8" x2="21" y1="6" y2="6"/>
+                  <line x1="8" x2="21" y1="12" y2="12"/>
+                  <line x1="8" x2="21" y1="18" y2="18"/>
+                  <line x1="3" x2="3.01" y1="6" y2="6"/>
+                  <line x1="3" x2="3.01" y1="12" y2="12"/>
+                  <line x1="3" x2="3.01" y1="18" y2="18"/>
+                </svg>
+              </button>
+            </div>
+            {{/if}}
+            
+            {{!-- Sort Dropdown --}}
+            {{#if config.showSorting}}
+            <div class="sf-sort-by">
+              <label>Sortiraj:</label>
+              <select data-action="sort-change">
+                <option value="recommended" {{#unless sort}}selected{{/unless}}>Preporučeno</option>
+                <option value="price_asc" {{#if (eq sort "price_asc")}}selected{{/if}}>Cijena: Niska → Visoka</option>
+                <option value="price_desc" {{#if (eq sort "price_desc")}}selected{{/if}}>Cijena: Visoka → Niska</option>
+                <option value="latest" {{#if (eq sort "latest")}}selected{{/if}}>Najnovije</option>
+                <option value="rating" {{#if (eq sort "rating")}}selected{{/if}}>Najbolje ocijenjeno</option>
+              </select>
+            </div>
+            {{/if}}
+          </div>
+        </div>
+        
+        {{!-- Products Grid --}}
+        {{#if products.length}}
+        {{> product-grid products=products showDescription=true showStock=true showAddToCart=true}}
+        
+        {{!-- Pagination --}}
+        {{#if (gt pagination.totalPages 1)}}
+        <nav class="sf-pagination" aria-label="Navigacija stranica">
+          <ul class="sf-pagination-list">
+            {{!-- Previous --}}
+            <li class="sf-pagination-item">
+              {{#if (gt pagination.page 1)}}
+              <a href="{{paginationUrl (subtract pagination.page 1)}}" class="sf-pagination-link sf-pagination-prev" aria-label="Prethodna stranica">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="m15 18-6-6 6-6"/>
+                </svg>
+              </a>
+              {{else}}
+              <span class="sf-pagination-link sf-pagination-prev sf-pagination-disabled" aria-disabled="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="m15 18-6-6 6-6"/>
+                </svg>
+              </span>
+              {{/if}}
+            </li>
+            
+            {{!-- Page Numbers --}}
+            {{#each pagination.pages}}
+            <li class="sf-pagination-item">
+              {{#if this.isCurrent}}
+              <span class="sf-pagination-link sf-pagination-current" aria-current="page">{{this.number}}</span>
+              {{else if this.isEllipsis}}
+              <span class="sf-pagination-ellipsis">…</span>
+              {{else}}
+              <a href="{{paginationUrl this.number}}" class="sf-pagination-link">{{this.number}}</a>
+              {{/if}}
+            </li>
+            {{/each}}
+            
+            {{!-- Next --}}
+            <li class="sf-pagination-item">
+              {{#if (lt pagination.page pagination.totalPages)}}
+              <a href="{{paginationUrl (add pagination.page 1)}}" class="sf-pagination-link sf-pagination-next" aria-label="Sljedeća stranica">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="m9 18 6-6-6-6"/>
+                </svg>
+              </a>
+              {{else}}
+              <span class="sf-pagination-link sf-pagination-next sf-pagination-disabled" aria-disabled="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="m9 18 6-6-6-6"/>
+                </svg>
+              </span>
+              {{/if}}
+            </li>
+          </ul>
+        </nav>
+        {{/if}}
+        
+        {{else}}
+        {{!-- Empty State --}}
+        <div class="sf-shop-empty">
+          <div class="sf-empty-state">
+            <div class="sf-empty-state-icon">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/>
+                <path d="M3 6h18"/>
+                <path d="M16 10a4 4 0 0 1-8 0"/>
+              </svg>
+            </div>
+            <h3 class="sf-empty-state-title">Nema proizvoda</h3>
+            <p class="sf-empty-state-description">
+              {{#if hasActiveFilters}}
+              Nema proizvoda koji odgovaraju odabranim filterima. Pokušajte promijeniti filtere.
+              {{else}}
+              Trenutno nema dostupnih proizvoda u trgovini.
+              {{/if}}
+            </p>
+            {{#if hasActiveFilters}}
+            <a href="/shop" class="sf-btn sf-btn-primary">Očisti filtere</a>
+            {{/if}}
+          </div>
+        </div>
+        {{/if}}
+        
+      </div>
+    </div>
+    
+  </div>
+</section>
+
+{{!-- Shop Listing JavaScript for interactivity --}}
+<script>
+(function() {
+  // Sort change handler
+  const sortSelect = document.querySelector('[data-action="sort-change"]');
+  if (sortSelect) {
+    sortSelect.addEventListener('change', function() {
+      const url = new URL(window.location.href);
+      if (this.value === 'recommended') {
+        url.searchParams.delete('sort');
+      } else {
+        url.searchParams.set('sort', this.value);
+      }
+      url.searchParams.delete('page');
+      window.location.href = url.toString();
+    });
+  }
+  
+  // Mobile filter drawer
+  const filterToggle = document.querySelector('[data-action="toggle-filters"]');
+  const sidebar = document.querySelector('[data-filters-sidebar]');
+  const filterClose = document.querySelector('[data-action="close-filters"]');
+  const filterOverlay = document.querySelector('[data-filter-overlay]');
+  
+  function openFilters() {
+    if (sidebar) {
+      sidebar.classList.add('sf-filters-active');
+      document.body.style.overflow = 'hidden';
+    }
+    if (filterOverlay) {
+      filterOverlay.classList.add('sf-overlay-visible');
+    }
+  }
+  
+  function closeFilters() {
+    if (sidebar) {
+      sidebar.classList.remove('sf-filters-active');
+      document.body.style.overflow = '';
+    }
+    if (filterOverlay) {
+      filterOverlay.classList.remove('sf-overlay-visible');
+    }
+  }
+  
+  if (filterToggle) {
+    filterToggle.addEventListener('click', openFilters);
+  }
+  
+  if (filterClose) {
+    filterClose.addEventListener('click', closeFilters);
+  }
+  
+  if (filterOverlay) {
+    filterOverlay.addEventListener('click', closeFilters);
+  }
+  
+  // View toggle (grid/list)
+  const viewButtons = document.querySelectorAll('[data-view]');
+  const productsContainer = document.querySelector('[data-products-container]');
+  
+  // Load saved view preference
+  const savedView = localStorage.getItem('shopView') || 'grid';
+  if (savedView === 'list' && productsContainer) {
+    productsContainer.classList.add('sf-list-view');
+    viewButtons.forEach(function(b) {
+      b.classList.toggle('sf-view-btn-active', b.dataset.view === 'list');
+    });
+  }
+  
+  viewButtons.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      const view = this.getAttribute('data-view');
+      viewButtons.forEach(function(b) {
+        b.classList.remove('sf-view-btn-active');
+      });
+      this.classList.add('sf-view-btn-active');
+      
+      if (productsContainer) {
+        productsContainer.classList.toggle('sf-list-view', view === 'list');
+      }
+      
+      // Save preference
+      localStorage.setItem('shopView', view);
+    });
+  });
+  
+  // Price Range Slider
+  const sliderContainer = document.querySelector('.sf-price-slider-container');
+  if (sliderContainer) {
+    const minSlider = sliderContainer.querySelector('.sf-price-slider-min');
+    const maxSlider = sliderContainer.querySelector('.sf-price-slider-max');
+    const range = sliderContainer.querySelector('.sf-price-slider-range');
+    const minInput = sliderContainer.querySelector('input[name="minPrice"]');
+    const maxInput = sliderContainer.querySelector('input[name="maxPrice"]');
+    // Get all min/max value spans (in label and elsewhere)
+    const minValues = document.querySelectorAll('.sf-price-value-min');
+    const maxValues = document.querySelectorAll('.sf-price-value-max');
+    
+    const minPrice = parseInt(sliderContainer.dataset.min) || 0;
+    const maxPrice = parseInt(sliderContainer.dataset.max) || 1000;
+    const gap = Math.max(1, Math.floor((maxPrice - minPrice) / 100));
+    
+    function updateSlider() {
+      let minVal = parseInt(minSlider.value);
+      let maxVal = parseInt(maxSlider.value);
+      
+      if (maxVal - minVal < gap) {
+        if (this === minSlider) {
+          minVal = maxVal - gap;
+          minSlider.value = minVal;
+        } else {
+          maxVal = minVal + gap;
+          maxSlider.value = maxVal;
+        }
+      }
+      
+      const rangeWidth = maxPrice - minPrice || 1;
+      const minPercent = ((minVal - minPrice) / rangeWidth) * 100;
+      const maxPercent = ((maxVal - minPrice) / rangeWidth) * 100;
+      range.style.left = minPercent + '%';
+      range.style.right = (100 - maxPercent) + '%';
+      
+      // Update all min/max value displays
+      minValues.forEach(el => el.textContent = minVal);
+      maxValues.forEach(el => el.textContent = maxVal);
+      
+      minInput.value = minVal > minPrice ? minVal : '';
+      maxInput.value = maxVal < maxPrice ? maxVal : '';
+    }
+    
+    minSlider.addEventListener('input', updateSlider);
+    maxSlider.addEventListener('input', updateSlider);
+    updateSlider.call(minSlider);
+  }
+})();
+</script>

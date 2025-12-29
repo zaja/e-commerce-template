@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="{{workspace.locale}}" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- SEO Meta -->
+  <title>{{#if metaTitle}}{{metaTitle}}{{else}}{{pageTitle}} | {{workspace.name}}{{/if}}</title>
+  <meta name="description" content="{{#if metaDescription}}{{metaDescription}}{{else}}{{workspace.description}}{{/if}}">
+  
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="{{#if metaTitle}}{{metaTitle}}{{else}}{{pageTitle}} | {{workspace.name}}{{/if}}">
+  <meta property="og:description" content="{{#if metaDescription}}{{metaDescription}}{{else}}{{workspace.description}}{{/if}}">
+  {{#if ogImage}}<meta property="og:image" content="{{ogImage}}">{{/if}}
+  <meta property="og:url" content="{{canonicalUrl}}">
+  <meta property="og:site_name" content="{{workspace.name}}">
+  
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{#if metaTitle}}{{metaTitle}}{{else}}{{pageTitle}} | {{workspace.name}}{{/if}}">
+  <meta name="twitter:description" content="{{#if metaDescription}}{{metaDescription}}{{else}}{{workspace.description}}{{/if}}">
+  {{#if twitterImage}}<meta name="twitter:image" content="{{twitterImage}}">{{/if}}
+  
+  <!-- Favicon -->
+  {{#if workspace.favicon}}
+  <link rel="icon" href="{{workspace.favicon}}" type="image/x-icon">
+  {{/if}}
+  
+  <!-- Canonical URL -->
+  <link rel="canonical" href="{{canonicalUrl}}">
+  
+  <!-- Preconnect to external resources -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Theme CSS Variables (from ThemeSettings) -->
+  <style>
+    :root {
+      --sf-color-primary: {{theme.primaryColor}};
+      --sf-color-secondary: {{theme.secondaryColor}};
+      --sf-color-accent: {{theme.accentColor}};
+      --sf-color-background: {{theme.backgroundColor}};
+      --sf-color-text: {{theme.textColor}};
+      --sf-font-heading: '{{theme.headingFont}}', sans-serif;
+      --sf-font-body: '{{theme.bodyFont}}', sans-serif;
+      --sf-container-width: {{theme.containerWidth}};
+      --sf-radius-lg: {{theme.borderRadius}};
+    }
+  </style>
+  
+  <!-- Design Set Styles -->
+  {{{designSetStyles}}}
+  
+  <!-- Custom CSS -->
+  {{#if theme.customCss}}
+  <style>{{{theme.customCss}}}</style>
+  {{/if}}
+  
+  <!-- Head scripts from workspace -->
+  {{{headScripts}}}
+</head>
+<body class="sf-body">
+  <!-- Skip to main content (accessibility) -->
+  <a href="#main-content" class="sf-sr-only sf-skip-link">Preskoči na sadržaj</a>
+  
+  <!-- Header -->
+  {{{header}}}
+  
+  <!-- Main Content -->
+  <main id="main-content" class="sf-main">
+    {{{content}}}
+  </main>
+  
+  <!-- Footer -->
+  {{{footer}}}
+  
+  <!-- Cart Drawer (if shop enabled) -->
+  <div id="cart-drawer" class="sf-cart-drawer" data-cart-drawer style="display: none;">
+    <!-- Cart content loaded via JS -->
+  </div>
+  
+  <!-- Toast notifications -->
+  <div id="toast-container" class="sf-toast-container"></div>
+  
+  <!-- Body scripts -->
+  {{{bodyScripts}}}
+  
+  <!-- Core interactions script -->
+  <script>
+    // Mobile menu toggle
+    document.querySelectorAll('[data-action="toggle-mobile-menu"]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const menu = document.querySelector('[data-mobile-menu]');
+        const isOpen = menu.style.display !== 'none';
+        menu.style.display = isOpen ? 'none' : 'block';
+        btn.setAttribute('aria-expanded', !isOpen);
+        document.body.style.overflow = isOpen ? '' : 'hidden';
+      });
+    });
+    
+    // Search toggle
+    document.querySelectorAll('[data-action="toggle-search"]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const overlay = document.querySelector('[data-search-overlay]');
+        overlay.style.display = 'block';
+        overlay.querySelector('input').focus();
+      });
+    });
+    
+    document.querySelectorAll('[data-action="close-search"]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelector('[data-search-overlay]').style.display = 'none';
+      });
+    });
+    
+    // Close search on escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        document.querySelector('[data-search-overlay]').style.display = 'none';
+        document.querySelector('[data-mobile-menu]').style.display = 'none';
+        document.body.style.overflow = '';
+      }
+    });
+  </script>
+</body>
+</html>

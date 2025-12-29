@@ -1,0 +1,84 @@
+{{!--
+  Category Hero Section
+  Displays category image, name, description
+  Breadcrumbs and subcategories are BELOW the hero
+  
+  Data from categoryPage context:
+  - name: Category name
+  - slug: Category slug
+  - description: Category description
+  - image: Category image URL
+  - parent: Parent category (if subcategory)
+  - childrenWithProducts: Subcategories with products
+  - _count.products: Product count
+--}}
+
+{{!-- Hero Section --}}
+<section class="sf-category-hero {{#if categoryPage.image}}sf-category-hero-with-image{{/if}}">
+  {{#if categoryPage.image}}
+  <div class="sf-category-hero-bg" style="background-image: url('{{categoryPage.image}}')"></div>
+  <div class="sf-category-hero-overlay"></div>
+  {{/if}}
+  
+  <div class="sf-container">
+    <div class="sf-category-hero-content">
+      <div class="sf-category-hero-main">
+        <h1 class="sf-category-hero-title">{{categoryPage.name}}</h1>
+        <p class="sf-category-hero-count">
+          {{categoryPage._count.products}} {{#if (eq categoryPage._count.products 1)}}proizvod{{else}}proizvoda{{/if}}
+        </p>
+      </div>
+      
+      {{#if categoryPage.description}}
+      <div class="sf-category-hero-description">
+        {{{categoryPage.description}}}
+      </div>
+      {{/if}}
+    </div>
+  </div>
+</section>
+
+{{!-- Breadcrumbs - OUTSIDE hero --}}
+<div class="sf-container">
+  <nav class="sf-breadcrumbs sf-category-breadcrumbs" aria-label="Breadcrumb">
+    <ol class="sf-breadcrumbs-list">
+      <li class="sf-breadcrumbs-item">
+        <a href="/" class="sf-breadcrumbs-link">Početna</a>
+      </li>
+      <li class="sf-breadcrumbs-item">
+        <a href="/shop" class="sf-breadcrumbs-link">Trgovina</a>
+      </li>
+      {{#if categoryPage.parent}}
+      <li class="sf-breadcrumbs-item">
+        <a href="/shop/category/{{categoryPage.parent.slug}}" class="sf-breadcrumbs-link">{{categoryPage.parent.name}}</a>
+      </li>
+      {{/if}}
+      <li class="sf-breadcrumbs-item sf-breadcrumbs-current" aria-current="page">
+        {{categoryPage.name}}
+      </li>
+    </ol>
+  </nav>
+</div>
+
+{{!-- Subcategories - OUTSIDE hero, below breadcrumbs --}}
+{{#if categoryPage.hasChildren}}
+<div class="sf-container">
+  <div class="sf-category-subcategories">
+    <div class="sf-category-subcategories-grid">
+      {{#each categoryPage.childrenWithProducts}}
+      <a href="/shop/category/{{this.slug}}" class="sf-category-subcategory-card">
+        {{#if this.image}}
+        <div class="sf-category-subcategory-image">
+          <img src="{{this.image}}" alt="{{this.name}}" loading="lazy">
+        </div>
+        {{/if}}
+        <div class="sf-category-subcategory-info">
+          <span class="sf-category-subcategory-name">{{this.name}}</span>
+          <span class="sf-category-subcategory-count">{{this._count.products}}</span>
+        </div>
+      </a>
+      {{/each}}
+    </div>
+  </div>
+</div>
+{{/if}}

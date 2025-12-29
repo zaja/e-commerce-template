@@ -1,91 +1,196 @@
 {
-  "name": "E-commerce",
+  "name": "Starter Flavor",
   "version": "1.0.0",
-  "description": "Klonirano iz E-commerce",
+  "description": "Moderan, čist i responzivan design set za e-commerce i blog stranice",
   "author": "SvejeDobro",
   "category": "ecommerce",
-  "tags": [
-    "modern",
-    "clean",
-    "minimal",
-    "responsive",
-    "tailwind-inspired"
-  ],
+  "tags": ["modern", "clean", "minimal", "responsive", "tailwind-inspired"],
   "preview": "assets/preview.png",
+  
   "compatibility": {
     "minVersion": "1.0.0",
-    "features": [
-      "products",
-      "variants",
-      "blog",
-      "pages",
-      "menus",
-      "cart",
-      "reviews",
-      "categories"
-    ]
+    "features": ["products", "variants", "blog", "pages", "menus", "cart", "reviews", "categories"]
   },
+  
   "sectionLibrary": {
     "enabled": true,
     "directory": "sections"
   },
+  
   "templates": {
     "header": "templates/header.html",
     "footer": "templates/footer.html",
     "layout": "templates/_layout.html"
   },
+  
   "sections": {
-    "hero-simple": "sections/hero/simple.hbs",
-    "hero-featured-product": "sections/hero/featured-product.hbs",
-    "hero-split": "sections/hero/split.hbs",
-    "products-grid": "sections/products/grid.hbs",
-    "products-featured": "sections/products/featured.hbs",
-    "products-carousel": "sections/products/carousel.hbs",
-    "products-categories": "sections/products/categories.hbs",
-    "blog-latest": "sections/blog/latest.hbs",
-    "blog-featured": "sections/blog/featured.hbs",
-    "content-features": "sections/content/features.hbs",
-    "content-text-image": "sections/content/text-image.hbs",
-    "content-faq": "sections/content/faq.hbs",
-    "cta-newsletter": "sections/cta/newsletter.hbs",
-    "cta-simple": "sections/cta/simple.hbs",
-    "testimonials-carousel": "sections/testimonials/carousel.hbs",
-    "testimonials-grid": "sections/testimonials/grid.hbs"
+    "hero-simple": {
+      "file": "sections/hero/simple.hbs",
+      "name": "Hero - Jednostavan",
+      "description": "Jednostavan hero s naslovom, podnaslovom i CTA buttonom",
+      "category": "HERO",
+      "allowedPages": ["HOMEPAGE", "CUSTOM_PAGE", "SHOP_PAGE"],
+      "maxPerPage": 1
+    },
+    "hero-featured-product": {
+      "file": "sections/hero/featured-product.hbs",
+      "name": "Hero - Istaknuti proizvod",
+      "description": "Hero s istaknutim proizvodom",
+      "category": "HERO",
+      "allowedPages": ["HOMEPAGE", "SHOP_PAGE"],
+      "maxPerPage": 1,
+      "dataSource": { "type": "products", "filter": "featured", "limit": 1 }
+    },
+    "hero-split": {
+      "file": "sections/hero/split.hbs",
+      "name": "Hero - Split",
+      "description": "Dvodijelni hero s tekstom i slikom",
+      "category": "HERO",
+      "allowedPages": ["HOMEPAGE", "CUSTOM_PAGE", "SHOP_PAGE"],
+      "maxPerPage": 1
+    },
+    "products-grid": {
+      "file": "sections/products/grid.hbs",
+      "name": "Proizvodi - Grid",
+      "description": "Prikaz proizvoda u responsivnom gridu",
+      "category": "PRODUCTS",
+      "allowedPages": ["*"],
+      "dataSource": { "type": "products", "filter": "latest", "limit": 8 }
+    },
+    "products-categories": {
+      "file": "sections/products/categories.hbs",
+      "name": "Kategorije proizvoda",
+      "description": "Vizualni prikaz kategorija proizvoda",
+      "category": "PRODUCTS",
+      "allowedPages": ["HOMEPAGE", "SHOP_PAGE"],
+      "dataSource": { "type": "categories" }
+    },
+    "blog-latest": {
+      "file": "sections/blog/latest.hbs",
+      "name": "Blog - Najnoviji članci",
+      "description": "Prikaz najnovijih blog postova",
+      "category": "BLOG",
+      "allowedPages": ["HOMEPAGE", "BLOG_PAGE"],
+      "dataSource": { "type": "posts", "filter": "latest", "limit": 3 }
+    },
+    "features": {
+      "file": "sections/content/features.hbs",
+      "name": "Značajke",
+      "description": "Lista značajki s ikonama",
+      "category": "FEATURES",
+      "allowedPages": ["*"]
+    },
+    "text-image": {
+      "file": "sections/content/text-image.hbs",
+      "name": "Tekst + Slika",
+      "description": "Dvodijelni layout s tekstom i slikom",
+      "category": "CONTENT",
+      "allowedPages": ["*"]
+    },
+    "faq": {
+      "file": "sections/content/faq.hbs",
+      "name": "FAQ",
+      "description": "Često postavljana pitanja s akordeonom",
+      "category": "CONTENT",
+      "allowedPages": ["*"]
+    },
+    "cta-newsletter": {
+      "file": "sections/cta/newsletter.hbs",
+      "name": "Newsletter",
+      "description": "Forma za prijavu na newsletter",
+      "category": "CTA",
+      "allowedPages": ["*"]
+    },
+    "cta-simple": {
+      "file": "sections/cta/simple.hbs",
+      "name": "CTA - Jednostavan",
+      "description": "Jednostavan poziv na akciju",
+      "category": "CTA",
+      "allowedPages": ["*"]
+    },
+    "testimonials-grid": {
+      "file": "sections/testimonials/grid.hbs",
+      "name": "Recenzije - Grid",
+      "description": "Prikaz recenzija kupaca u gridu",
+      "category": "TESTIMONIALS",
+      "allowedPages": ["*"],
+      "dataSource": { "type": "reviews", "filter": "latest", "limit": 6 }
+    },
+    "shop-listing": {
+      "file": "sections/shop/listing.hbs",
+      "name": "Shop - Listing",
+      "description": "Glavna stranica trgovine s filterima, sortiranjem i paginacijom",
+      "category": "PRODUCTS",
+      "allowedPages": ["SHOP_PAGE", "CATEGORY_PAGE"],
+      "maxPerPage": 1
+    },
+    "category-hero": {
+      "file": "sections/shop/category-hero.hbs",
+      "name": "Category Hero",
+      "description": "Hero sekcija za stranicu kategorije s breadcrumbsima, nazivom i opisom",
+      "category": "HERO",
+      "allowedPages": ["CATEGORY_PAGE"],
+      "maxPerPage": 1
+    }
   },
+  
+  "detailPageSections": {
+    "_comment": "Sekcije za detail pages - koristi detail-page-renderer.ts, ne Section Library",
+    "product": [
+      "sections/product/gallery.hbs",
+      "sections/product/info.hbs",
+      "sections/product/reviews.hbs",
+      "sections/product/related.hbs"
+    ],
+    "blog": [
+      "sections/blog/post-header.hbs",
+      "sections/blog/post-content.hbs",
+      "sections/blog/author-bio.hbs",
+      "sections/blog/related-posts.hbs"
+    ],
+    "shop": [
+      "sections/shop/category-hero.hbs"
+    ],
+    "page": [
+      "sections/page/content.hbs"
+    ]
+  },
+  
   "styles": [
     "styles/base.css",
     "styles/components.css",
     "styles/sections.css"
   ],
+  
   "customization": {
     "colors": {
-      "primary": {
-        "default": "#2563EB",
+      "primary": { 
+        "default": "#2563EB", 
         "label": "Primarna boja",
         "description": "Glavna boja branda - koristi se za gumbe i akcente"
       },
-      "secondary": {
-        "default": "#1E293B",
+      "secondary": { 
+        "default": "#1E293B", 
         "label": "Sekundarna boja",
         "description": "Boja za naslove i footer"
       },
-      "accent": {
-        "default": "#F59E0B",
+      "accent": { 
+        "default": "#F59E0B", 
         "label": "Akcentna boja",
         "description": "Boja za badge-eve i highlights"
       },
-      "background": {
-        "default": "#FFFFFF",
-        "label": "Pozadina"
+      "background": { 
+        "default": "#FFFFFF", 
+        "label": "Pozadina" 
       },
       "surface": {
         "default": "#F8FAFC",
         "label": "Površina",
         "description": "Boja za kartice i sekcije"
       },
-      "text": {
-        "default": "#0F172A",
-        "label": "Tekst"
+      "text": { 
+        "default": "#0F172A", 
+        "label": "Tekst" 
       },
       "textMuted": {
         "default": "#64748B",
@@ -93,76 +198,41 @@
       }
     },
     "fonts": {
-      "heading": {
-        "default": "Inter",
-        "options": [
-          "Inter",
-          "Poppins",
-          "Montserrat",
-          "Plus Jakarta Sans",
-          "DM Sans"
-        ],
+      "heading": { 
+        "default": "Inter", 
+        "options": ["Inter", "Poppins", "Montserrat", "Plus Jakarta Sans", "DM Sans"],
         "googleFont": true,
         "label": "Font naslova"
       },
-      "body": {
-        "default": "Inter",
-        "options": [
-          "Inter",
-          "Roboto",
-          "Open Sans",
-          "Lato",
-          "Source Sans Pro"
-        ],
+      "body": { 
+        "default": "Inter", 
+        "options": ["Inter", "Roboto", "Open Sans", "Lato", "Source Sans Pro"],
         "googleFont": true,
         "label": "Font teksta"
       }
     },
     "layout": {
-      "containerWidth": {
-        "default": "1280px",
-        "options": [
-          "1024px",
-          "1280px",
-          "1440px",
-          "1536px"
-        ],
+      "containerWidth": { 
+        "default": "1280px", 
+        "options": ["1024px", "1280px", "1440px", "1536px"],
         "label": "Širina sadržaja"
       },
       "borderRadius": {
         "default": "0.5rem",
-        "options": [
-          "0",
-          "0.25rem",
-          "0.5rem",
-          "0.75rem",
-          "1rem"
-        ],
+        "options": ["0", "0.25rem", "0.5rem", "0.75rem", "1rem"],
         "label": "Zaobljenost rubova"
       },
       "headerStyle": {
         "default": "transparent",
-        "options": [
-          "transparent",
-          "solid",
-          "sticky"
-        ],
+        "options": ["transparent", "solid", "sticky"],
         "label": "Stil headera"
       }
     }
   },
+  
   "requiredData": {
-    "workspace": [
-      "name",
-      "logo"
-    ],
-    "products": {
-      "minimum": 4,
-      "message": "Trebate minimalno 4 proizvoda za optimalan prikaz"
-    },
-    "categories": {
-      "minimum": 3,
-      "message": "Preporučamo minimalno 3 kategorije"
-    }
+    "workspace": ["name", "logo"],
+    "products": { "minimum": 4, "message": "Trebate minimalno 4 proizvoda za optimalan prikaz" },
+    "categories": { "minimum": 3, "message": "Preporučamo minimalno 3 kategorije" }
   }
 }
